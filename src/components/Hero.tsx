@@ -1,105 +1,81 @@
-import React, { useEffect, useState } from 'react';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight } from 'lucide-react';
 import SocialLinks from './SocialLinks';
-import { bioInfo, socialLinks } from '../data/personalData';
-import profileImage from '../assets/Chernor_1MB_HighQuality.jpg';
-import '../styles/noise.css';
+import { bioInfo } from '../data/personalData';
 
 const Hero: React.FC = () => {
-  const [opacity, setOpacity] = useState(1);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const maxScroll = window.innerHeight;
-      const newOpacity = Math.max(0, 1 - (scrollPosition / maxScroll));
-      setOpacity(newOpacity);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <section 
-      id="home" 
-      className="min-h-screen flex items-center pt-16 bg-background/80 dark:bg-background/80 backdrop-blur-sm transition-opacity duration-300"
-      style={{ opacity }}
-    >
+    <section id="home" className="min-h-[calc(100vh-4rem)] flex items-center py-16 lg:py-24">
       <div className="container">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Text Content */}
+          <div className="space-y-8 text-center lg:text-left">
             <div className="space-y-4">
-              <h1 className="heading-1 text-foreground dark:text-white">
-                Hi, I'm <span className="text-primary dark:text-primary-foreground">{bioInfo.name}</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+                <span className="text-foreground">Hi, I'm </span>
+                <span className="text-primary">{bioInfo.name}</span>
               </h1>
-              <h2 className="heading-2 text-foreground dark:text-white">
-                <span className="text-primary dark:text-primary-foreground">Frontend</span> Developer
-              </h2>
-              <p className="text-foreground dark:text-gray-300 text-lg max-w-lg">
+              <p className="text-xl sm:text-2xl text-muted-foreground font-medium">
+                {bioInfo.title}
+              </p>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto lg:mx-0">
                 {bioInfo.description}
               </p>
             </div>
-            
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <a 
-                href="#contact" 
-                className="button button-primary dark:bg-primary-foreground dark:text-primary dark:hover:bg-primary-foreground/90 px-8 py-3 text-lg group"
-              >
-                Hire Me
-                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-              </a>
-              <SocialLinks links={socialLinks} />
-            </div>
 
-            <div className="hidden lg:flex items-center gap-4 text-foreground dark:text-gray-300">
-              <span className="h-px w-16 bg-border dark:bg-gray-600"></span>
-              <span className="text-sm font-medium">Scroll to explore</span>
-            </div>
-          </div>
-          
-          {/* Profile Image with Circle Effects */}
-          <div className="relative flex justify-center items-center">
-            {/* Outer decorative ring */}
-            <div className="absolute w-[32rem] h-[32rem] rounded-full border-2 border-gray-200/20 dark:border-white/10 animate-[spin_30s_linear_infinite]"></div>
-            
-            {/* Middle ring with segments */}
-            <div className="absolute w-[30rem] h-[30rem]">
-              <div className="absolute inset-0 rounded-full border-2 border-gray-200/20 dark:border-white/10"></div>
-              {/* Ring segments */}
-              <div className="absolute h-full w-full animate-[spin_20s_linear_infinite]">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-8 border-2 border-gray-200/30 dark:border-white/20 rounded-full"></div>
-                <div className="absolute top-1/2 right-0 -translate-y-1/2 h-4 w-8 border-2 border-gray-200/30 dark:border-white/20 rounded-full"></div>
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-8 border-2 border-gray-200/30 dark:border-white/20 rounded-full"></div>
-                <div className="absolute top-1/2 left-0 -translate-y-1/2 h-4 w-8 border-2 border-gray-200/30 dark:border-white/20 rounded-full"></div>
+            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+              <a
+                href="#contact"
+                className="button button-primary px-8 py-3 rounded-full w-full sm:w-auto text-base"
+              >
+                Contact Me
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+              <div className="w-full sm:w-auto">
+                <SocialLinks links={bioInfo.socialLinks} variant="muted" />
               </div>
             </div>
-
-            {/* Main image container */}
-            <div className="relative w-[28rem] h-[28rem] overflow-hidden rounded-full shadow-xl transform hover:scale-[1.02] transition-transform duration-500">
-              <img 
-                src={profileImage}
-                alt="Professional headshot"
-                className="w-full h-full object-cover object-center filter contrast-105 saturate-95"
-              />
-              {/* Vintage effect overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-amber-800/5 to-neutral-900/10 mix-blend-overlay rounded-full"></div>
-              {/* Film grain effect */}
-              <div className="absolute inset-0 bg-noise opacity-[0.02] mix-blend-overlay rounded-full"></div>
-              {/* Inner circle border */}
-              <div className="absolute -inset-px rounded-full border-2 border-gray-200/20 dark:border-white/10"></div>
-            </div>
-
-            {/* Background glow */}
-            <div className="absolute -inset-x-20 -inset-y-32 hidden lg:block">
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-800/10 via-neutral-900/5 to-neutral-800/10 blur-3xl opacity-30 dark:opacity-20"></div>
-            </div>
           </div>
-        </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden lg:block">
-          <ChevronDown className="text-primary dark:text-white" size={24} />
+          {/* Profile Image */}
+          <div className="relative order-first lg:order-last mx-auto max-w-sm lg:max-w-none">
+            <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-96 lg:h-96 mx-auto">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary/20 to-primary/0 animate-float" />
+              {!imageError ? (
+                <img
+                  src={bioInfo.profileImage}
+                  alt={bioInfo.name}
+                  className={`rounded-full object-cover w-full h-full relative z-10 p-2 transition-opacity duration-300 ${
+                    imageLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  onError={(e) => {
+                    console.error('Image failed to load:', e);
+                    setImageError(true);
+                  }}
+                  onLoad={() => setImageLoaded(true)}
+                  loading="eager"
+                  style={{
+                    objectPosition: '50% 15%',
+                    objectFit: 'cover'
+                  }}
+                />
+              ) : (
+                <div className="rounded-full w-full h-full relative z-10 p-2 bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+                  <span className="text-4xl font-bold text-gray-400">
+                    {bioInfo.name.split(' ').map(n => n[0]).join('')}
+                  </span>
+                </div>
+              )}
+              <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
+            </div>
+
+            {/* Background decorations */}
+            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/5 to-primary/0 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/5 rounded-full blur-3xl" />
+          </div>
         </div>
       </div>
     </section>

@@ -1,56 +1,51 @@
-import { useEffect } from 'react';
+import React, { Suspense, lazy } from 'react';
 import Header from './components/Header';
-import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import Services from './components/Services';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
 import { bioInfo } from './data/personalData';
 
-function App() {
-  useEffect(() => {
-    // Update document title
-    document.title = `${bioInfo.name} | ${bioInfo.title}`;
-    
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const targetId = (e.currentTarget as HTMLAnchorElement).getAttribute('href')?.substring(1);
-        if (!targetId) return;
-        
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80, // Offset for header
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-    
-    return () => {
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.removeEventListener('click', function() {});
-      });
-    };
-  }, []);
+// Lazy load components
+const Hero = lazy(() => import('./components/Hero'));
+const About = lazy(() => import('./components/About'));
+const Skills = lazy(() => import('./components/Skills'));
+const Services = lazy(() => import('./components/Services'));
+const Contact = lazy(() => import('./components/Contact'));
+const Footer = lazy(() => import('./components/Footer'));
 
+// Loading component
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center min-h-[200px]">
+    <div className="relative w-16 h-16">
+      <div className="absolute top-0 left-0 w-full h-full border-4 border-primary/20 rounded-full"></div>
+      <div className="absolute top-0 left-0 w-full h-full border-4 border-primary rounded-full animate-spin border-t-transparent"></div>
+    </div>
+  </div>
+);
+
+const App: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-background dark:bg-background text-foreground dark:text-foreground">
+    <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow">
-        <Hero />
-        <About />
-        <Skills />
-        <Services />
-        <Contact />
+        <Suspense fallback={<LoadingSpinner />}>
+          <Hero />
+        </Suspense>
+        <Suspense fallback={<LoadingSpinner />}>
+          <About />
+        </Suspense>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Skills />
+        </Suspense>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Services />
+        </Suspense>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Contact />
+        </Suspense>
       </main>
-      <Footer />
+      <Suspense fallback={<LoadingSpinner />}>
+        <Footer />
+      </Suspense>
     </div>
   );
-}
+};
 
 export default App;

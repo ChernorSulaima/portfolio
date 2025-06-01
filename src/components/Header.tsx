@@ -8,11 +8,18 @@ const Header: React.FC = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+    // Prevent scrolling when menu is open
+    document.body.style.overflow = !isMenuOpen ? 'hidden' : 'auto';
   };
 
   const toggleTheme = () => {
     setIsDark(!isDark);
     document.documentElement.classList.toggle('dark');
+  };
+
+  const handleNavClick = () => {
+    setIsMenuOpen(false);
+    document.body.style.overflow = 'auto';
   };
 
   useEffect(() => {
@@ -28,14 +35,21 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
     <header 
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-background/80 border-b backdrop-blur-sm' : 'bg-background/0'
+        scrolled ? 'bg-background/80 backdrop-blur-sm border-b' : 'bg-background/0'
       }`}
     >
       <div className="container mx-auto px-4 h-16 flex justify-between items-center">
-        <a href="#" className="text-2xl font-bold">
+        <a href="#" className="text-2xl font-bold relative z-50">
           <span className="text-foreground">Chi</span>
           <span className="text-primary">zo</span>
         </a>
@@ -60,7 +74,7 @@ const Header: React.FC = () => {
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="button button-secondary p-2"
+            className="button button-secondary p-2 rounded-full"
             aria-label="Toggle theme"
           >
             {isDark ? <Sun size={20} /> : <Moon size={20} />}
@@ -68,7 +82,7 @@ const Header: React.FC = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden button button-secondary p-2"
+            className="md:hidden button button-secondary p-2 rounded-full relative z-50"
             onClick={toggleMenu}
             aria-label="Toggle menu"
           >
@@ -79,18 +93,19 @@ const Header: React.FC = () => {
 
       {/* Mobile Navigation */}
       <div 
-        className={`md:hidden absolute top-16 left-0 w-full bg-background border-b transform transition-transform duration-300 ease-in-out ${
-          isMenuOpen ? 'translate-y-0' : '-translate-y-full'
+        className={`md:hidden fixed inset-0 bg-background/95 backdrop-blur-sm transition-transform duration-300 ease-in-out ${
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
+        style={{ top: '64px' }}
       >
-        <nav className="container mx-auto px-4">
-          <ul className="py-4 space-y-2">
+        <nav className="container mx-auto px-4 py-8">
+          <ul className="space-y-6">
             {['Home', 'About', 'Skills', 'Services', 'Contact'].map((item) => (
-              <li key={item}>
+              <li key={item} className="border-b border-border/50 pb-4">
                 <a
                   href={`#${item.toLowerCase()}`}
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-300 block py-2"
-                  onClick={() => setIsMenuOpen(false)}
+                  className="text-xl font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 block"
+                  onClick={handleNavClick}
                 >
                   {item}
                 </a>

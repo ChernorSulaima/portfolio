@@ -8,9 +8,9 @@ export const personalInfo: PersonalInfo = {
 };
 
 export const languages: Language[] = [
-  { name: 'English', percentage: 100 },
-  { name: 'Spanish', percentage: 80 },
-  { name: 'French', percentage: 60 },
+  { name: 'Krio', percentage: 100 },
+  { name: 'Fullah', percentage: 100 },
+  { name: 'English', percentage: 80 },
 ];
 
 export const skills: Skill[] = [
@@ -67,4 +67,6 @@ export const bioInfo = {
   name: 'Chernor S. Jalloh',
   title: 'Software Engineer',
   description: 'I design and develop experiences that make people\'s lives simpler through Web and Mobile apps. I work with TypeScript, React, and other modern libraries and frameworks.',
+  socialLinks,
+  profileImage: '/portfolio/images/Chernor_1MB_HighQuality.jpg'
 };
