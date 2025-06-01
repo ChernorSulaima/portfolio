@@ -7,5 +7,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  base: '/portfolio/',
+  base: process.env.NODE_ENV === 'production' ? '/portfolio/' : '/',
+  publicDir: 'public',
 });

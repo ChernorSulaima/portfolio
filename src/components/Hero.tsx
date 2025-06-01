@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import SocialLinks from './SocialLinks';
 import { bioInfo } from '../data/personalData';
@@ -46,7 +46,7 @@ const Hero: React.FC = () => {
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary/20 to-primary/0 animate-float" />
               {!imageError ? (
                 <img
-                  src={bioInfo.profileImage}
+                  src="/images/Chernor_1MB_HighQuality.jpg"
                   alt={bioInfo.name}
                   className={`rounded-full object-cover w-full h-full relative z-10 p-2 transition-opacity duration-300 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'

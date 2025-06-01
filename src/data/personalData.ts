@@ -68,5 +68,5 @@ export const bioInfo = {
   title: 'Software Engineer',
   description: 'I design and develop experiences that make people\'s lives simpler through Web and Mobile apps. I work with TypeScript, React, and other modern libraries and frameworks.',
   socialLinks,
-  profileImage: '/portfolio/images/Chernor_1MB_HighQuality.jpg'
+  profileImage: '/images/Chernor_1MB_HighQuality.jpg'
 };
