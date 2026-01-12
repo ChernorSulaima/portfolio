@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Download, GraduationCap, Calendar, User } from 'lucide-react';
 import SocialLinks from './SocialLinks';
 import { bioInfo } from '../data/personalData';
 
@@ -8,74 +8,98 @@ const Hero: React.FC = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <section id="home" className="min-h-[calc(100vh-4rem)] flex items-center py-16 lg:py-24">
-      <div className="container">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <section id="home" className="relative pt-20 pb-24 lg:pt-32 lg:pb-32 overflow-hidden bg-background">
+      <div className="container px-4 mx-auto max-w-7xl">
+        <div className="flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-24">
+
           {/* Text Content */}
-          <div className="space-y-8 text-center lg:text-left">
-            <div className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-                <span className="text-foreground">Hi, I'm </span>
-                <span className="text-primary">{bioInfo.name}</span>
-              </h1>
-              <p className="text-xl sm:text-2xl text-muted-foreground font-medium">
-                {bioInfo.title}
-              </p>
-              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto lg:mx-0">
-                {bioInfo.description}
-              </p>
+          <div className="flex-1 text-center lg:text-left space-y-8 z-10">
+
+            {/* Status Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-secondary rounded-full mb-2">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-xs font-bold font-mono uppercase tracking-wider text-foreground">Available for work</span>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+            {/* Name & Title */}
+            <div className="space-y-4">
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight text-foreground font-heading leading-[1.1]">
+                Chernor Sulaiman Jalloh
+              </h1>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-muted-foreground font-heading">
+                Full-Stack Software Engineer
+              </h2>
+            </div>
+
+            {/* Personal Details Row */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm sm:text-base text-foreground/80 font-medium font-sans">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 border border-border transition-colors hover:bg-secondary">
+                <User className="w-4 h-4 text-primary" />
+                <span>24 Years Old</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 border border-border transition-colors hover:bg-secondary">
+                <GraduationCap className="w-4 h-4 text-primary" />
+                <span>Limkokwing University Sierra Leone</span>
+              </div>
+            </div>
+
+            <p className="text-lg text-foreground/70 max-w-xl mx-auto lg:mx-0 font-sans leading-relaxed">
+              I build pixel-perfect, performant web applications with a focus on seamless user experiences and scalable architecture.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
               <a
-                href="#contact"
-                className="button button-primary px-8 py-3 rounded-full w-full sm:w-auto text-base"
+                href="#projects"
+                className="px-8 py-4 bg-foreground text-background font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2"
               >
-                Contact Me
-                <ArrowRight className="ml-2 h-4 w-4" />
+                View Selected Works <ArrowRight className="w-4 h-4" />
               </a>
-              <div className="w-full sm:w-auto">
-                <SocialLinks links={bioInfo.socialLinks} variant="muted" />
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-4 border border-border text-foreground font-bold rounded-lg hover:bg-secondary transition-colors flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Resume
+              </a>
+            </div>
+
+            <div className="pt-6">
+              <SocialLinks links={bioInfo.socialLinks} variant="default" />
+            </div>
+          </div>
+
+          {/* Image Content - Larger & Animated */}
+          <div className="relative flex-shrink-0">
+            <div className="relative w-80 h-80 sm:w-96 sm:h-96 lg:w-[500px] lg:h-[500px]">
+
+              {/* Animated Rings */}
+              <div className="absolute inset-[-20px] rounded-full border border-border/30 border-t-primary/60 animate-[spin_10s_linear_infinite]" />
+              <div className="absolute inset-[-10px] rounded-full border border-border/30 border-b-primary/60 animate-[spin_12s_linear_infinite_reverse]" />
+
+              {/* Container Glow (Subtle) */}
+              <div className="absolute inset-0 bg-primary/5 rounded-full blur-2xl -z-10" />
+
+              <div className="w-full h-full rounded-full border-[6px] border-background shadow-2xl overflow-hidden ring-1 ring-border/50 relative z-10 transition-transform duration-500 hover:scale-[1.02]">
+                {!imageError ? (
+                  <img
+                    src="/images/Chernor_1MB_HighQuality.jpg"
+                    alt={bioInfo.name}
+                    className={`w-full h-full object-cover transition-all duration-1000 ${imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+                    onError={() => setImageError(true)}
+                    onLoad={() => setImageLoaded(true)}
+                    loading="eager"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-secondary flex items-center justify-center text-4xl font-bold font-heading text-muted-foreground">
+                    CJ
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Profile Image */}
-          <div className="relative order-first lg:order-last mx-auto max-w-sm lg:max-w-none">
-            <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-96 lg:h-96 mx-auto">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary/20 to-primary/0 animate-float" />
-              {!imageError ? (
-                <img
-                  src="/images/Chernor_1MB_HighQuality.jpg"
-                  alt={bioInfo.name}
-                  className={`rounded-full object-cover w-full h-full relative z-10 p-2 transition-opacity duration-300 ${
-                    imageLoaded ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  onError={(e) => {
-                    console.error('Image failed to load:', e);
-                    setImageError(true);
-                  }}
-                  onLoad={() => setImageLoaded(true)}
-                  loading="eager"
-                  style={{
-                    objectPosition: '50% 15%',
-                    objectFit: 'cover'
-                  }}
-                />
-              ) : (
-                <div className="rounded-full w-full h-full relative z-10 p-2 bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
-                  <span className="text-4xl font-bold text-gray-400">
-                    {bioInfo.name.split(' ').map(n => n[0]).join('')}
-                  </span>
-                </div>
-              )}
-              <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
-            </div>
-
-            {/* Background decorations */}
-            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/5 to-primary/0 rounded-full blur-3xl" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/5 rounded-full blur-3xl" />
-          </div>
         </div>
       </div>
     </section>

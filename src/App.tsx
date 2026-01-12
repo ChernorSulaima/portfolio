@@ -5,6 +5,8 @@ import { bioInfo } from './data/personalData';
 // Lazy load components
 const Hero = lazy(() => import('./components/Hero'));
 const About = lazy(() => import('./components/About'));
+const Projects = lazy(() => import('./components/Projects'));
+const Experience = lazy(() => import('./components/Experience'));
 const Skills = lazy(() => import('./components/Skills'));
 const Services = lazy(() => import('./components/Services'));
 const Contact = lazy(() => import('./components/Contact'));
@@ -22,21 +24,33 @@ const LoadingSpinner = () => (
 
 const App: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
       <Header />
       <main className="flex-grow">
         <Suspense fallback={<LoadingSpinner />}>
           <Hero />
         </Suspense>
+
+        <Suspense fallback={<LoadingSpinner />}>
+          <Experience />
+        </Suspense>
+
+        <Suspense fallback={<LoadingSpinner />}>
+          <Projects />
+        </Suspense>
+
         <Suspense fallback={<LoadingSpinner />}>
           <About />
         </Suspense>
+
         <Suspense fallback={<LoadingSpinner />}>
           <Skills />
         </Suspense>
+
         <Suspense fallback={<LoadingSpinner />}>
           <Services />
         </Suspense>
+
         <Suspense fallback={<LoadingSpinner />}>
           <Contact />
         </Suspense>

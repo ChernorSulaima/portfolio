@@ -31,3 +31,28 @@ export interface Service {
   icon: string;
   items: string[];
 }
+
+export interface Experience {
+  company: string;
+  role: string;
+  period: string;
+  description: string;
+  achievements: string[];
+  type: 'internship' | 'contract' | 'full-time';
+}
+
+export interface Project {
+  id: number;
+  title: string;
+  category: string;
+  description: string;
+  image: string;
+  technologies: string[];
+  repoUrl?: string;
+  liveUrl?: string;
+  featured?: boolean;
+  role?: string;
+  problem?: string; // For Case Studies
+  solution?: string; // For Case Studies
+  keyFeatures?: string[]; // List of specific features
+}

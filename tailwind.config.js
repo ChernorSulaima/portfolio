@@ -14,6 +14,11 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["Plus Jakarta Sans", "sans-serif"],
+        heading: ["Outfit", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"], // 'super good' mono font
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

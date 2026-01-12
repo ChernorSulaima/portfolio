@@ -1,112 +1,101 @@
-import React, { useState } from 'react';
-import { personalInfo, bioInfo } from '../data/personalData';
-import { ArrowRight } from 'lucide-react';
+import React from 'react';
+import { personalInfo, languages } from '../data/personalData';
+import { Section } from './ui/Section';
+import { MapPin, Clock, Zap, Target, Users2 } from 'lucide-react';
 
 const About: React.FC = () => {
-  const [imageError, setImageError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  const infoItems = [
-    { label: 'Age', value: personalInfo.age },
-    { label: 'Residence', value: personalInfo.residence },
-    { label: 'Freelance', value: personalInfo.freelanceStatus },
-    { label: 'Address', value: personalInfo.address },
+  const highlights = [
+    {
+      icon: Zap,
+      title: 'ADAPTABILITY',
+      description: 'Rapidly mastering new frameworks and engineering paradigms.',
+    },
+    {
+      icon: Users2,
+      title: 'COLLABORATION',
+      description: 'Thriving in cross-functional, agile teams to deliver excellence.',
+    },
+    {
+      icon: Target,
+      title: 'PRODUCT FOCUS',
+      description: 'Building with the end-user in mind to solve tangible problems.',
+    },
   ];
 
   return (
-    <section id="about" className="py-16 sm:py-20 lg:py-24 bg-gray-50/50 dark:bg-gray-900/50">
-      <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center space-y-4 mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
-              About Me
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Get to know me better
-            </p>
-          </div>
+    <Section id="about" className="py-12 bg-background border-t border-border">
+      <div className="container px-4 mx-auto max-w-6xl">
 
-          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
-            {/* Image Section */}
-            <div className="relative mx-auto max-w-sm lg:max-w-none">
-              <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-96 lg:h-96 mx-auto">
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-primary/20 to-primary/0 animate-float" />
-                {!imageError ? (
-                  <img
-                    src={bioInfo.profileImage}
-                    alt={bioInfo.name}
-                    className={`rounded-2xl object-cover w-full h-full relative z-10 p-2 transition-opacity duration-300 ${
-                      imageLoaded ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    onError={(e) => {
-                      console.error('Image failed to load:', e);
-                      setImageError(true);
-                    }}
-                    onLoad={() => setImageLoaded(true)}
-                    loading="lazy"
-                    style={{
-                      objectPosition: '50% 15%',
-                      objectFit: 'cover'
-                    }}
-                  />
-                ) : (
-                  <div className="rounded-2xl w-full h-full relative z-10 p-2 bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
-                    <span className="text-4xl font-bold text-gray-400">
-                      {bioInfo.name.split(' ').map(n => n[0]).join('')}
-                    </span>
-                  </div>
-                )}
-                <div className="absolute inset-0 rounded-2xl border-2 border-primary/20" />
-              </div>
-              {/* Background decorations */}
-              <div className="absolute -inset-4 bg-gradient-to-tr from-primary/5 to-primary/0 rounded-full blur-3xl" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/5 rounded-full blur-3xl" />
-            </div>
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
 
-            {/* Content Section */}
-            <div className="space-y-6">
-              <div className="prose prose-lg dark:prose-invert">
-                <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300">
-                  I am a passionate Software Engineer with a focus on creating beautiful and functional web experiences. 
-                  My journey in web development started with a curiosity for how things work on the internet, 
-                  and has evolved into a professional career building modern web applications.
+          {/* Left Column: Bio */}
+          <div className="flex-1 space-y-8">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground mb-6 font-heading">
+                ABOUT ME
+              </h2>
+              <div className="space-y-6 text-lg leading-relaxed text-muted-foreground font-sans">
+                <p>
+                  I am a software engineer focused on bridging the gap between <strong className="text-foreground">complex backend logic</strong> and <strong className="text-foreground">intuitive user interfaces</strong>.
+                  Currently organizing my workflows to maximize efficiency, I have delivered production-grade applications for diverse clients,
+                  including securing a return offer from a leading cybersecurity firm.
+                </p>
+                <p>
+                  My engineering philosophy is grounded in reality: <strong className="text-foreground">Ship clean, maintainable code that solves actual business problems.</strong> I avoid over-engineering in favor of robust, scalable solutions.
                 </p>
               </div>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4 sm:gap-6">
-                {infoItems.map((item) => (
-                  <div key={item.label} className="space-y-1">
-                    <dt className="text-sm text-gray-500 dark:text-gray-400">{item.label}:</dt>
-                    <dd className="text-base sm:text-lg font-medium text-gray-900 dark:text-white">
-                      {item.value}
-                    </dd>
-                  </div>
-                ))}
+            {/* Info Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-5 rounded-lg border border-border bg-secondary/20">
+                <div className="flex items-center gap-3 mb-2 opacity-80">
+                  <MapPin className="w-4 h-4 text-foreground" />
+                  <span className="text-xs font-bold font-mono uppercase tracking-wider text-foreground">Location</span>
+                </div>
+                <p className="font-bold text-foreground">{personalInfo.address}</p>
               </div>
+              <div className="p-5 rounded-lg border border-border bg-secondary/20">
+                <div className="flex items-center gap-3 mb-2 opacity-80">
+                  <Clock className="w-4 h-4 text-foreground" />
+                  <span className="text-xs font-bold font-mono uppercase tracking-wider text-foreground">Availability</span>
+                </div>
+                <p className="font-bold text-foreground">{personalInfo.freelanceStatus}</p>
+              </div>
+            </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a
-                  href="#contact"
-                  className="button button-primary px-6 py-3 rounded-full inline-flex items-center justify-center gap-2 w-full sm:w-auto"
-                >
-                  Hire Me
-                  <ArrowRight className="w-4 h-4" />
-                </a>
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="button button-secondary px-6 py-3 rounded-full inline-flex items-center justify-center gap-2 w-full sm:w-auto"
-                >
-                  Download CV
-                  <ArrowRight className="w-4 h-4" />
-                </a>
+            <div className="pt-2">
+              <h3 className="text-sm font-bold font-mono uppercase tracking-wider text-muted-foreground mb-4">LANGUAGES</h3>
+              <div className="flex flex-wrap gap-2">
+                {languages.map((lang) => (
+                  <span key={lang.name} className="px-4 py-1.5 border border-border bg-background text-foreground text-sm font-bold font-mono rounded overflow-hidden uppercase tracking-tight">
+                    {lang.name}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
+
+          {/* Right Column: Highlights (Structural Style) */}
+          <div className="w-full lg:w-[400px] flex flex-col gap-4">
+            {highlights.map((item, index) => (
+              <div key={index} className="group p-6 rounded-lg border border-border bg-card hover:bg-secondary/40 transition-all duration-300">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="p-2 rounded bg-foreground text-background">
+                    <item.icon className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-bold font-mono text-foreground tracking-tight">{item.title}</h4>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
 

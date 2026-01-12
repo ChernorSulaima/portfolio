@@ -5,10 +5,12 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+
+  const navItems = ['Home', 'Experience', 'Projects', 'Contact'];
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    // Prevent scrolling when menu is open
     document.body.style.overflow = !isMenuOpen ? 'hidden' : 'auto';
   };
 
@@ -17,22 +19,40 @@ const Header: React.FC = () => {
     document.documentElement.classList.toggle('dark');
   };
 
-  const handleNavClick = () => {
+  const handleNavClick = (item: string) => {
     setIsMenuOpen(false);
     document.body.style.overflow = 'auto';
+    setActiveSection(item.toLowerCase());
   };
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // ScrollSpy Implementation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    navItems.forEach((item) => {
+      const element = document.getElementById(item.toLowerCase());
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   // Cleanup on unmount
@@ -43,25 +63,23 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <header 
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-background/80 backdrop-blur-sm border-b' : 'bg-background/0'
-      }`}
+    <header
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm' : 'bg-transparent'
+        }`}
     >
-      <div className="container mx-auto px-4 h-16 flex justify-between items-center">
-        <a href="#" className="text-2xl font-bold relative z-50">
-          <span className="text-foreground">Chi</span>
-          <span className="text-primary">zo</span>
-        </a>
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation - Moved to Left to balance layout */}
         <nav className="hidden md:block">
           <ul className="flex space-x-8">
-            {['Home', 'About', 'Skills', 'Services', 'Contact'].map((item) => (
+            {navItems.map((item) => (
               <li key={item}>
                 <a
                   href={`#${item.toLowerCase()}`}
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-300"
+                  className={`text-sm font-semibold tracking-wide transition-colors duration-300 hover:text-primary ${activeSection === item.toLowerCase()
+                    ? 'text-primary'
+                    : 'text-muted-foreground'
+                    }`}
                 >
                   {item}
                 </a>
@@ -70,42 +88,46 @@ const Header: React.FC = () => {
           </ul>
         </nav>
 
-        <div className="flex items-center space-x-4">
-          {/* Theme Toggle */}
+        {/* Mobile Menu Button - Left aligned on mobile */}
+        <div className="md:hidden">
           <button
-            onClick={toggleTheme}
-            className="button button-secondary p-2 rounded-full"
-            aria-label="Toggle theme"
-          >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden button button-secondary p-2 rounded-full relative z-50"
+            className="p-2 -ml-2 rounded-full hover:bg-accent text-foreground"
             onClick={toggleMenu}
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Theme Toggle - Right aligned */}
+        <div className="flex items-center">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full hover:bg-accent text-foreground transition-colors"
+            aria-label="Toggle theme"
+          >
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
           </button>
         </div>
       </div>
 
       {/* Mobile Navigation */}
-      <div 
-        className={`md:hidden fixed inset-0 bg-background/95 backdrop-blur-sm transition-transform duration-300 ease-in-out ${
-          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+      <div
+        className={`md:hidden fixed inset-0 bg-background/95 backdrop-blur-xl transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
         style={{ top: '64px' }}
       >
         <nav className="container mx-auto px-4 py-8">
-          <ul className="space-y-6">
-            {['Home', 'About', 'Skills', 'Services', 'Contact'].map((item) => (
+          <ul className="space-y-4">
+            {navItems.map((item) => (
               <li key={item} className="border-b border-border/50 pb-4">
                 <a
                   href={`#${item.toLowerCase()}`}
-                  className="text-xl font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 block"
-                  onClick={handleNavClick}
+                  className={`text-lg font-medium transition-colors duration-300 block ${activeSection === item.toLowerCase()
+                    ? 'text-primary'
+                    : 'text-muted-foreground'
+                    }`}
+                  onClick={() => handleNavClick(item)}
                 >
                   {item}
                 </a>

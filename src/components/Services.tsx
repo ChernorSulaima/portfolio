@@ -1,103 +1,71 @@
 import React from 'react';
-import { Code, Layout, Smartphone, FileText } from 'lucide-react';
+import { Section } from './ui/Section';
+import { Card } from './ui/Card';
+import { services } from '../data/personalData';
+import { Code2, Layout, Zap, ArrowRight, Monitor, Laptop } from 'lucide-react';
 
-interface Service {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  skills: string[];
-}
-
-const ServiceCard: React.FC<Service> = ({ icon, title, description, skills }) => (
-  <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-    <div className="space-y-4">
-      {/* Icon */}
-      <div className="w-12 h-12 bg-yellow-100/80 dark:bg-yellow-100/10 rounded-lg flex items-center justify-center text-yellow-600 dark:text-yellow-400">
-        {icon}
-      </div>
-
-      {/* Title & Description */}
-      <div className="space-y-2">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h3>
-        <p className="text-gray-600 dark:text-gray-300">{description}</p>
-      </div>
-
-      {/* Skills */}
-      <ul className="space-y-2">
-        {skills.map((skill, index) => (
-          <li key={index} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-            <span className="w-1.5 h-1.5 bg-yellow-400 dark:bg-yellow-500 rounded-full"></span>
-            {skill}
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
-);
+const iconMap: { [key: string]: React.FC<{ className?: string }> } = {
+  Code2,
+  Layout,
+  Zap,
+};
 
 const Services: React.FC = () => {
-  const services: Service[] = [
-    {
-      icon: <Code className="w-6 h-6" />,
-      title: "Web Development",
-      description: "Building modern, responsive websites and web applications",
-      skills: [
-        "Frontend Development",
-        "Responsive Design",
-        "Web Applications"
-      ]
-    },
-    {
-      icon: <Layout className="w-6 h-6" />,
-      title: "UI/UX Design",
-      description: "Creating intuitive user interfaces and experiences",
-      skills: [
-        "Mobile App Design",
-        "Website Design",
-        "Prototyping"
-      ]
-    },
-    {
-      icon: <Smartphone className="w-6 h-6" />,
-      title: "Mobile Development",
-      description: "Developing cross-platform mobile applications",
-      skills: [
-        "React Native",
-        "iOS & Android",
-        "App Maintenance"
-      ]
-    },
-    {
-      icon: <FileText className="w-6 h-6" />,
-      title: "Content Creation",
-      description: "Creating engaging digital content for your brand",
-      skills: [
-        "Technical Writing",
-        "Documentation",
-        "Blog Posts"
-      ]
-    }
-  ];
-
   return (
-    <section id="services" className="py-20 bg-gray-50 dark:bg-gray-900/50">
-      <div className="container">
-        {/* Section Header */}
-        <div className="text-center space-y-4 mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">My Services</h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            I offer a range of services to help businesses and individuals create exceptional digital experiences.
-          </p>
+    <Section id="services" className="bg-background py-12 border-t border-border">
+      <div className="container px-4 mx-auto max-w-6xl">
+
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground mb-4 font-heading">
+              SERVICES
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-xl font-sans leading-relaxed">
+              Engineering solutions that drive business growth.
+            </p>
+          </div>
+          <a href="#contact" className="group inline-flex items-center text-sm font-bold font-mono text-foreground hover:text-primary transition-colors uppercase tracking-wider">
+            Start a Project <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </a>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => (
-            <ServiceCard key={index} {...service} />
-          ))}
+        <div className="grid md:grid-cols-3 gap-6">
+          {services.map((service, index) => {
+            const Icon = iconMap[service.icon] || Code2;
+            return (
+              <Card
+                key={index}
+                className="p-8 h-full border border-border bg-card hover:border-foreground/20 transition-all duration-300 group"
+                variant="default"
+              >
+                <div className="flex flex-col h-full">
+                  <div className="w-12 h-12 rounded bg-secondary text-foreground flex items-center justify-center mb-6 group-hover:bg-foreground group-hover:text-background transition-colors">
+                    <Icon className="w-6 h-6" />
+                  </div>
+
+                  <h3 className="text-xl font-bold text-foreground mb-4 font-heading tracking-tight">
+                    {service.title}
+                  </h3>
+
+                  <p className="text-muted-foreground leading-relaxed mb-8 flex-grow font-sans">
+                    {service.description}
+                  </p>
+
+                  <ul className="space-y-4 border-t border-border pt-6">
+                    {service.items.map((item, i) => (
+                      <li key={i} className="flex items-center gap-3 text-sm font-bold text-foreground/80 font-mono">
+                        <div className="w-1.5 h-1.5 rounded-full bg-foreground flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Card>
+            );
+          })}
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
 
