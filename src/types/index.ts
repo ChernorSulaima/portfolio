@@ -52,7 +52,16 @@ export interface Project {
   liveUrl?: string;
   featured?: boolean;
   role?: string;
-  problem?: string; // For Case Studies
-  solution?: string; // For Case Studies
-  keyFeatures?: string[]; // List of specific features
+  problem?: string;
+  solution?: string;
+  keyFeatures?: string[];
+}
+
+export interface Testimonial {
+  name: string;
+  role: string;
+  company: string;
+  quote: string;
+  image: string;
+  rating: number;
 }

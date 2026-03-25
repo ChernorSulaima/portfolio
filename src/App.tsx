@@ -1,15 +1,16 @@
 import React, { Suspense, lazy } from 'react';
 import Header from './components/Header';
-import { bioInfo } from './data/personalData';
 
 // Lazy load components
 const Hero = lazy(() => import('./components/Hero'));
-const About = lazy(() => import('./components/About'));
-const Projects = lazy(() => import('./components/Projects'));
 const Experience = lazy(() => import('./components/Experience'));
+const Projects = lazy(() => import('./components/Projects'));
+const About = lazy(() => import('./components/About'));
 const Skills = lazy(() => import('./components/Skills'));
 const Services = lazy(() => import('./components/Services'));
+const Testimonials = lazy(() => import('./components/Testimonials'));
 const Contact = lazy(() => import('./components/Contact'));
+const GitHubOverview = lazy(() => import('./components/GitHubOverview'));
 const Footer = lazy(() => import('./components/Footer'));
 
 // Loading component
@@ -52,7 +53,15 @@ const App: React.FC = () => {
         </Suspense>
 
         <Suspense fallback={<LoadingSpinner />}>
+          <Testimonials />
+        </Suspense>
+
+        <Suspense fallback={<LoadingSpinner />}>
           <Contact />
+        </Suspense>
+
+        <Suspense fallback={<LoadingSpinner />}>
+          <GitHubOverview />
         </Suspense>
       </main>
       <Suspense fallback={<LoadingSpinner />}>

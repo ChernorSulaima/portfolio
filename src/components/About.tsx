@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { personalInfo, languages } from '../data/personalData';
 import { Section } from './ui/Section';
 import { MapPin, Clock, Zap, Target, Users2 } from 'lucide-react';
@@ -23,14 +24,18 @@ const About: React.FC = () => {
   ];
 
   return (
-    <Section id="about" className="py-12 bg-background border-t border-border">
+    <Section id="about" className="py-20 md:py-32 bg-background border-t border-border">
       <div className="container px-4 mx-auto max-w-6xl">
-
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
 
           {/* Left Column: Bio */}
           <div className="flex-1 space-y-8">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.7 }}
+            >
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground mb-6 font-heading">
                 ABOUT ME
               </h2>
@@ -44,44 +49,63 @@ const About: React.FC = () => {
                   My engineering philosophy is grounded in reality: <strong className="text-foreground">Ship clean, maintainable code that solves actual business problems.</strong> I avoid over-engineering in favor of robust, scalable solutions.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Info Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-5 rounded-lg border border-border bg-secondary/20">
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+            >
+              <div className="p-5 rounded-lg border border-border bg-secondary/20 hover:bg-secondary/40 transition-colors">
                 <div className="flex items-center gap-3 mb-2 opacity-80">
                   <MapPin className="w-4 h-4 text-foreground" />
                   <span className="text-xs font-bold font-mono uppercase tracking-wider text-foreground">Location</span>
                 </div>
                 <p className="font-bold text-foreground">{personalInfo.address}</p>
               </div>
-              <div className="p-5 rounded-lg border border-border bg-secondary/20">
+              <div className="p-5 rounded-lg border border-border bg-secondary/20 hover:bg-secondary/40 transition-colors">
                 <div className="flex items-center gap-3 mb-2 opacity-80">
                   <Clock className="w-4 h-4 text-foreground" />
                   <span className="text-xs font-bold font-mono uppercase tracking-wider text-foreground">Availability</span>
                 </div>
                 <p className="font-bold text-foreground">{personalInfo.freelanceStatus}</p>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="pt-2">
+            <motion.div
+              className="pt-2"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+            >
               <h3 className="text-sm font-bold font-mono uppercase tracking-wider text-muted-foreground mb-4">LANGUAGES</h3>
               <div className="flex flex-wrap gap-2">
                 {languages.map((lang) => (
-                  <span key={lang.name} className="px-4 py-1.5 border border-border bg-background text-foreground text-sm font-bold font-mono rounded overflow-hidden uppercase tracking-tight">
+                  <span key={lang.name} className="px-4 py-1.5 border border-border bg-background text-foreground text-sm font-bold font-mono rounded overflow-hidden uppercase tracking-tight hover:border-primary/50 transition-colors">
                     {lang.name}
                   </span>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Right Column: Highlights (Structural Style) */}
+          {/* Right Column: Highlights */}
           <div className="w-full lg:w-[400px] flex flex-col gap-4">
             {highlights.map((item, index) => (
-              <div key={index} className="group p-6 rounded-lg border border-border bg-card hover:bg-secondary/40 transition-all duration-300">
+              <motion.div
+                key={index}
+                className="group p-6 rounded-lg border border-border bg-card hover:bg-secondary/40 hover:border-primary/30 transition-all duration-300"
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15, duration: 0.6 }}
+              >
                 <div className="flex items-center gap-4 mb-3">
-                  <div className="p-2 rounded bg-foreground text-background">
+                  <div className="p-2 rounded bg-foreground text-background group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                     <item.icon className="w-5 h-5" />
                   </div>
                   <h4 className="font-bold font-mono text-foreground tracking-tight">{item.title}</h4>
@@ -89,10 +113,9 @@ const About: React.FC = () => {
                 <p className="text-muted-foreground leading-relaxed">
                   {item.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
-
         </div>
       </div>
     </Section>
