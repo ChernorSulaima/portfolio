@@ -128,7 +128,7 @@ const Hero: React.FC = () => {
               <div className="w-full h-full rounded-full border-[6px] border-background shadow-2xl overflow-hidden ring-1 ring-border/50 relative z-10 transition-transform duration-500 hover:scale-[1.02]">
                 {!imageError ? (
                   <img
-                    src="/images/Chernor_1MB_HighQuality.jpg"
+                    src="/images/1760520818253.png"
                     alt={bioInfo.name}
                     className={`w-full h-full object-cover transition-all duration-1000 ${imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
                     onError={() => setImageError(true)}

@@ -259,7 +259,7 @@ export const bioInfo = {
   title: 'Software Engineer',
   description: 'Software Engineer building secure, high-performance web apps. Specialized in React, TypeScript, and modern digital experiences.',
   socialLinks,
-  profileImage: '/images/Chernor_1MB_HighQuality.jpg',
+  profileImage: '/images/1760520818253.png',
   projects: projects,
   experience: experience,
 };
