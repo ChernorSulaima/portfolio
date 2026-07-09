@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Moon, Sun } from 'lucide-react';
 
 const Header: React.FC = () => {
@@ -84,23 +85,23 @@ const Header: React.FC = () => {
           : 'bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <div className="container mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
         {/* Logo */}
         <a
           href="#home"
-          className="text-xl font-extrabold font-heading tracking-tight text-foreground hover:opacity-80 transition-opacity"
+          className="text-lg sm:text-xl font-extrabold font-heading tracking-tight text-foreground hover:opacity-80 transition-opacity"
         >
           Sulaiman<span className="text-primary">.</span>
         </a>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:block">
-          <ul className="flex space-x-8">
+          <ul className="flex space-x-6 lg:space-x-8">
             {navItems.map((item) => (
               <li key={item}>
                 <a
                   href={`#${item.toLowerCase()}`}
-                  className={`relative text-sm font-semibold tracking-wide transition-colors duration-300 hover:text-primary ${
+                  className={`relative text-sm font-semibold tracking-wide transition-colors duration-300 hover:text-primary py-1 ${
                     activeSection === item.toLowerCase()
                       ? 'text-primary'
                       : 'text-muted-foreground'
@@ -108,7 +109,11 @@ const Header: React.FC = () => {
                 >
                   {item}
                   {activeSection === item.toLowerCase() && (
-                    <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary rounded-full" />
+                    <motion.span
+                      className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary rounded-full"
+                      layoutId="activeNavIndicator"
+                      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                    />
                   )}
                 </a>
               </li>
@@ -117,64 +122,95 @@ const Header: React.FC = () => {
         </nav>
 
         {/* Right side controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           {/* Theme Toggle */}
-          <button
+          <motion.button
             onClick={toggleTheme}
             className="p-2 rounded-full hover:bg-secondary/80 text-foreground transition-colors"
             aria-label="Toggle theme"
+            whileTap={{ scale: 0.9, rotate: 180 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
           >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
+            {isDark ? <Sun size={18} /> : <Moon size={18} />}
+          </motion.button>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button
-              className="p-2 rounded-full hover:bg-secondary/80 text-foreground"
+            <motion.button
+              className="p-2.5 rounded-full hover:bg-secondary/80 text-foreground min-w-[44px] min-h-[44px] flex items-center justify-center"
               onClick={toggleMenu}
               aria-label="Toggle menu"
+              whileTap={{ scale: 0.9 }}
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+              <AnimatePresence mode="wait">
+                {isMenuOpen ? (
+                  <motion.div
+                    key="close"
+                    initial={{ opacity: 0, rotate: -90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <X size={22} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="menu"
+                    initial={{ opacity: 0, rotate: 90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: -90 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Menu size={22} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
       </div>
 
       {/* Mobile Navigation */}
-      <div
-        className={`md:hidden fixed inset-0 bg-background/95 backdrop-blur-xl transition-all duration-500 ease-out ${
-          isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'
-        }`}
-        style={{ top: '64px' }}
-      >
-        <nav className="container mx-auto px-4 py-8">
-          <ul className="space-y-1">
-            {navItems.map((item, index) => (
-              <li
-                key={item}
-                className="overflow-hidden"
-                style={{
-                  transform: isMenuOpen ? 'translateY(0)' : 'translateY(20px)',
-                  opacity: isMenuOpen ? 1 : 0,
-                  transition: `all 0.4s ease ${index * 0.05}s`,
-                }}
-              >
-                <a
-                  href={`#${item.toLowerCase()}`}
-                  className={`text-2xl font-bold font-heading tracking-tight transition-colors duration-300 block py-4 border-b border-border/30 ${
-                    activeSection === item.toLowerCase()
-                      ? 'text-primary'
-                      : 'text-foreground'
-                  }`}
-                  onClick={() => handleNavClick(item)}
-                >
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            className="md:hidden fixed inset-0 bg-background/95 backdrop-blur-xl"
+            style={{ top: '56px' }}
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          >
+            <nav className="container mx-auto px-4 py-6 sm:py-8">
+              <ul className="space-y-1">
+                {navItems.map((item, index) => (
+                  <motion.li
+                    key={item}
+                    initial={{ opacity: 0, x: 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 + index * 0.06, type: 'spring', stiffness: 200, damping: 20 }}
+                  >
+                    <a
+                      href={`#${item.toLowerCase()}`}
+                      className={`text-xl sm:text-2xl font-bold font-heading tracking-tight transition-colors duration-300 block py-3 sm:py-4 border-b border-border/30 min-h-[48px] flex items-center ${
+                        activeSection === item.toLowerCase()
+                          ? 'text-primary'
+                          : 'text-foreground'
+                      }`}
+                      onClick={() => handleNavClick(item)}
+                    >
+                      {activeSection === item.toLowerCase() && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary mr-3 flex-shrink-0" />
+                      )}
+                      {item}
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
