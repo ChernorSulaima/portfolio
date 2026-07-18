@@ -9,6 +9,10 @@ build
 
 # Testing
 coverage
+playwright-report
+test-results
+blob-report
+playwright/.cache
 
 # Environment files
 .env

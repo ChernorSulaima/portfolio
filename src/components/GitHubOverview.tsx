@@ -56,6 +56,7 @@ const getBrandedColor = (ghColor: string, isDark: boolean): string => {
 const GitHubOverview: React.FC = () => {
   const [apiData, setApiData] = useState<GitHubAPIResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [hoveredDay, setHoveredDay] = useState<ContributionDay | null>(null);
 
@@ -70,12 +71,19 @@ const GitHubOverview: React.FC = () => {
 
   useEffect(() => {
     fetch('/github-data.json')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => {
+        if (!res.ok) throw new Error(`Failed to load GitHub data (${res.status})`);
+        return res.json();
+      })
+      .then((data) => {
+        if (!data?.data?.user) throw new Error('Invalid GitHub data shape');
         setApiData(data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
   }, []);
 
   // Compute derived data
@@ -166,7 +174,31 @@ const GitHubOverview: React.FC = () => {
     );
   }
 
-  if (!apiData) return null;
+  if (error || !apiData) {
+    return (
+      <section id="github" className="py-20 md:py-32 bg-background border-t border-border">
+        <div className="container px-4 mx-auto max-w-6xl text-center space-y-4">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <Github className="w-8 h-8 text-foreground" />
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-foreground font-heading">
+              GITHUB OVERVIEW
+            </h2>
+          </div>
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto font-sans leading-relaxed">
+            Contribution snapshot is temporarily unavailable. Visit my GitHub profile for the latest activity.
+          </p>
+          <a
+            href={`https://github.com/${GITHUB_USERNAME}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center text-sm font-bold font-mono text-foreground hover:text-primary transition-colors uppercase tracking-wider"
+          >
+            View Profile <ExternalLink className="ml-2 w-4 h-4" />
+          </a>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="github" className="py-20 md:py-32 bg-background border-t border-border">
@@ -187,7 +219,7 @@ const GitHubOverview: React.FC = () => {
               </h2>
             </div>
             <p className="text-muted-foreground text-lg max-w-xl font-sans leading-relaxed">
-              Live contribution data from my GitHub profile.
+              Contribution snapshot from my GitHub profile (refreshed periodically via public/github-data.json).
             </p>
           </div>
           <a

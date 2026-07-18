@@ -1,54 +1,87 @@
-# Chizo - Personal Portfolio
+# Chernor Sulaiman Jalloh — Portfolio
 
-A modern, responsive portfolio website built with React, TypeScript, and Tailwind CSS.
+A modern, responsive personal portfolio built with React, TypeScript, Vite, Tailwind CSS, and Framer Motion. Deployed on **Vercel**.
+
+**Live site:** https://portfolio-two-amber-40.vercel.app/
 
 ## Features
 
-- 🌓 Dark/Light mode support
-- 📱 Fully responsive design
-- 💬 WhatsApp integration for contact
-- ⚡ Fast and performant
-- 🎨 Modern UI with animations
-- 🔍 SEO friendly
+- Sectioned single-page layout (Hero, Experience, Projects, About, Skills, Services, Testimonials, Pricing Calculator, Contact, GitHub Overview)
+- Dark/light theme with `localStorage` persistence and system preference fallback
+- Interactive pricing calculator with typed configuration and WhatsApp quote handoff
+- Contact form that opens a prefilled WhatsApp conversation
+- GitHub contribution snapshot from static JSON
+- Lazy-loaded sections, responsive layout, reduced-motion friendly animations
+- Playwright smoke tests and GitHub Actions CI
 
-## Tech Stack
+## Tech stack
 
-- React
-- TypeScript
-- Tailwind CSS
+- React 18 + TypeScript
 - Vite
+- Tailwind CSS
+- Framer Motion
 - Lucide Icons
+- Playwright (`@playwright/test`)
+- Vercel (`vercel.json`)
 
-## Getting Started
+## Getting started
 
-1. Clone the repository
 ```bash
-git clone https://github.com/your-username/chizo-portfolio.git
-```
-
-2. Install dependencies
-```bash
-cd chizo-portfolio
 npm install
-```
-
-3. Start the development server
-```bash
 npm run dev
 ```
 
-4. Build for production
-```bash
-npm run build
-```
+### Scripts
 
-## Contact
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Local development server |
+| `npm run build` | Type-check + production build |
+| `npm run preview` | Preview production build |
+| `npm run lint` | ESLint (zero warnings) |
+| `npm test` | Playwright tests |
+| `npm run check` | Lint + build + test |
 
-For any inquiries, you can reach me at:
-- WhatsApp: +232 74 512 941
-- Email: Chernorsulaimanjalloh2025@gmail.com
-- Location: Freetown, Sierra Leone
+## Editing content
+
+| What | Where |
+|------|-------|
+| Bio, experience, projects, skills, services, testimonials, socials | `src/data/personalData.ts` |
+| Pricing options, add-ons, timelines, currency, disclaimer | `src/data/pricingData.ts` |
+| WhatsApp phone number | `WHATSAPP_PHONE` in `src/data/pricingData.ts` |
+| Site URL constant | `SITE_URL` in `src/data/pricingData.ts` |
+| Resume download | `public/resume.pdf` |
+| Project / profile images | `public/images/` |
+| GitHub snapshot | `public/github-data.json` |
+
+### Pricing notes
+
+Amounts in `pricingData.ts` are **provisional placeholders**. Review and adjust before treating calculator output as official rates. Estimates are labeled non-binding in the UI and in generated quote messages.
+
+### Refreshing GitHub data
+
+1. Query the GitHub GraphQL API for your user contributions + repositories (same shape as the existing JSON).
+2. Replace `public/github-data.json`.
+3. Rebuild / redeploy. If the file is missing or invalid, the GitHub section shows a graceful fallback with a profile link.
+
+## Contact flow
+
+1. Optionally configure an estimate in **Pricing** and click **Get Detailed Quote**.
+2. The Contact message field is prefilled (editable).
+3. Submit opens `https://wa.me/<WHATSAPP_PHONE>?text=...` with name, email, and message encoded.
+
+EmailJS is intentionally not used.
+
+## Deployment (Vercel)
+
+- Framework: Vite
+- Build command: `npm run build`
+- Output directory: `dist`
+- SPA fallback configured in `vercel.json`
+- `vite.config.ts` uses `base: '/'` for the Vercel root deploy
+
+Connect the GitHub repository to Vercel and deploy from `main`/`master`. Preview deployments are created automatically for pull requests.
 
 ## License
 
-MIT License 
+MIT

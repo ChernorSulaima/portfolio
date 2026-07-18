@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { projects } from '../data/personalData';
 import { ArrowUpRight, ChevronRight, Lock } from 'lucide-react';
 import { Project } from '../types';

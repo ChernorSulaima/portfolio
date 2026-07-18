@@ -2,24 +2,42 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Moon, Sun } from 'lucide-react';
 
+const THEME_STORAGE_KEY = 'portfolio-theme';
+
+/** Concise primary nav — Skills, Testimonials, and GitHub remain reachable via footer links */
+const NAV_ITEMS = ['Home', 'Experience', 'Projects', 'About', 'Services', 'Pricing', 'Contact'] as const;
+
+const getInitialTheme = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  const stored = localStorage.getItem(THEME_STORAGE_KEY);
+  if (stored === 'dark') return true;
+  if (stored === 'light') return false;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
+
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(getInitialTheme);
   const [activeSection, setActiveSection] = useState('home');
   const lastScrollY = useRef(0);
 
-  const navItems = ['Home', 'Experience', 'Projects', 'About', 'Services', 'Contact'];
-
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    document.body.style.overflow = !isMenuOpen ? 'hidden' : 'auto';
+    setIsMenuOpen((open) => {
+      const next = !open;
+      document.body.style.overflow = next ? 'hidden' : 'auto';
+      return next;
+    });
   };
 
   const toggleTheme = () => {
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle('dark');
+    setIsDark((prev) => {
+      const next = !prev;
+      document.documentElement.classList.toggle('dark', next);
+      localStorage.setItem(THEME_STORAGE_KEY, next ? 'dark' : 'light');
+      return next;
+    });
   };
 
   const handleNavClick = (item: string) => {
@@ -29,11 +47,14 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark);
+  }, [isDark]);
+
+  useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrolled(currentScrollY > 50);
 
-      // Hide on scroll down, show on scroll up
       if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
         setHidden(true);
       } else {
@@ -47,7 +68,6 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // ScrollSpy Implementation
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -60,7 +80,7 @@ const Header: React.FC = () => {
       { threshold: 0.3 }
     );
 
-    navItems.forEach((item) => {
+    NAV_ITEMS.forEach((item) => {
       const element = document.getElementById(item.toLowerCase());
       if (element) observer.observe(element);
     });
@@ -68,7 +88,6 @@ const Header: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       document.body.style.overflow = 'auto';
@@ -86,7 +105,6 @@ const Header: React.FC = () => {
       }`}
     >
       <div className="container mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
-        {/* Logo */}
         <a
           href="#home"
           className="text-lg sm:text-xl font-extrabold font-heading tracking-tight text-foreground hover:opacity-80 transition-opacity"
@@ -94,10 +112,9 @@ const Header: React.FC = () => {
           Sulaiman<span className="text-primary">.</span>
         </a>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:block">
-          <ul className="flex space-x-6 lg:space-x-8">
-            {navItems.map((item) => (
+        <nav className="hidden md:block" aria-label="Primary">
+          <ul className="flex space-x-5 lg:space-x-7">
+            {NAV_ITEMS.map((item) => (
               <li key={item}>
                 <a
                   href={`#${item.toLowerCase()}`}
@@ -121,25 +138,25 @@ const Header: React.FC = () => {
           </ul>
         </nav>
 
-        {/* Right side controls */}
         <div className="flex items-center gap-1 sm:gap-2">
-          {/* Theme Toggle */}
           <motion.button
             onClick={toggleTheme}
-            className="p-2 rounded-full hover:bg-secondary/80 text-foreground transition-colors"
-            aria-label="Toggle theme"
+            className="p-2 rounded-full hover:bg-secondary/80 text-foreground transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+            aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+            data-testid="theme-toggle"
             whileTap={{ scale: 0.9, rotate: 180 }}
             transition={{ type: 'spring', stiffness: 300, damping: 15 }}
           >
             {isDark ? <Sun size={18} /> : <Moon size={18} />}
           </motion.button>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <motion.button
               className="p-2.5 rounded-full hover:bg-secondary/80 text-foreground min-w-[44px] min-h-[44px] flex items-center justify-center"
               onClick={toggleMenu}
               aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+              data-testid="mobile-menu-toggle"
               whileTap={{ scale: 0.9 }}
             >
               <AnimatePresence mode="wait">
@@ -170,7 +187,6 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -181,9 +197,9 @@ const Header: React.FC = () => {
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           >
-            <nav className="container mx-auto px-4 py-6 sm:py-8">
+            <nav className="container mx-auto px-4 py-6 sm:py-8" aria-label="Mobile">
               <ul className="space-y-1">
-                {navItems.map((item, index) => (
+                {NAV_ITEMS.map((item, index) => (
                   <motion.li
                     key={item}
                     initial={{ opacity: 0, x: 40 }}

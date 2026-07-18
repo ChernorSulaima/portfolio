@@ -65,3 +65,40 @@ export interface Testimonial {
   image: string;
   rating: number;
 }
+
+export interface PricingOption {
+  id: string;
+  label: string;
+  description: string;
+  basePrice: number;
+}
+
+export interface PricingAddOn {
+  id: string;
+  label: string;
+  description: string;
+  /** List price; individual add-ons must be ≤ 150. Bundle uses discounted package price. */
+  price: number;
+  /** When true, selecting this replaces all other add-ons (everything package). */
+  isBundle?: boolean;
+}
+
+export interface TimelineOption {
+  id: string;
+  label: string;
+  description: string;
+  multiplier: number;
+}
+
+export interface QuoteSummary {
+  projectTypeId: string;
+  projectTypeLabel: string;
+  addOnIds: string[];
+  addOnLabels: string[];
+  timelineId: string;
+  timelineLabel: string;
+  subtotal: number;
+  total: number;
+  currency: string;
+  formattedTotal: string;
+}
