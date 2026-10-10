@@ -1,311 +1,164 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { bioInfo } from '../data/personalData';
-import { ArrowRight, Building2, Calendar, Briefcase, GraduationCap, Film, Workflow, Code2, Sparkles } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Kicker from './ui/Kicker';
+import Icon from './ui/Icon';
+import { RESUME_FILENAME, RESUME_URL, jobs } from '../data/personalData';
 
-// Map job types to color schemes and icons
-const typeConfig: Record<string, { bg: string; text: string; border: string; glow: string; label: string; icon: React.FC<{ className?: string }> }> = {
-  internship: {
-    bg: 'bg-emerald-500/10',
-    text: 'text-emerald-500',
-    border: 'border-emerald-500/20',
-    glow: 'shadow-emerald-500/20',
-    label: 'Internship — Offer Extended',
-    icon: GraduationCap,
-  },
-  'full-time': {
-    bg: 'bg-blue-500/10',
-    text: 'text-blue-500',
-    border: 'border-blue-500/20',
-    glow: 'shadow-blue-500/20',
-    label: 'Full-Time',
-    icon: Briefcase,
-  },
-  contract: {
-    bg: 'bg-amber-500/10',
-    text: 'text-amber-500',
-    border: 'border-amber-500/20',
-    glow: 'shadow-amber-500/20',
-    label: 'Contract',
-    icon: Code2,
-  },
-};
-
-// Pick a unique icon per role
-const getRoleIcon = (role: string) => {
-  if (role.toLowerCase().includes('video')) return Film;
-  if (role.toLowerCase().includes('automation') || role.toLowerCase().includes('workflow')) return Workflow;
-  if (role.toLowerCase().includes('facilitator') || role.toLowerCase().includes('mentor')) return Sparkles;
-  return Code2;
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30, filter: 'blur(6px)' },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: {
-      delay: i * 0.06,
-      duration: 0.7,
-      type: 'spring',
-      stiffness: 80,
-      damping: 16,
-    },
-  }),
-};
-
-const achievementVariants = {
-  hidden: { opacity: 0, x: -12 },
-  visible: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    transition: {
-      delay: 0.25 + i * 0.1,
-      duration: 0.4,
-      ease: 'easeOut',
-    },
-  }),
-};
+// Timeline geometry (px): the rail starts 39px below the list top and ends 24px above its bottom.
+const RAIL_TOP = 39;
+const RAIL_INSET = 63;
 
 const Experience: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const trackRef = useRef<HTMLOListElement>(null);
+  const [progress, setProgress] = useState({ ratio: 0, active: 0 });
+  const [expanded, setExpanded] = useState(0);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start center', 'end center'],
-  });
-
-  const ballProgress = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  // The glowing ball follows the middle of the viewport down the rail; every role it passes lights up.
+  const measure = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const scroller = document.scrollingElement || document.documentElement;
+    let ratio = 0;
+    let active = 0;
+    if (scroller.scrollHeight > vh + 20) {
+      const rect = track.getBoundingClientRect();
+      const span = Math.max(1, rect.height - RAIL_INSET);
+      ratio = Math.min(1, Math.max(0, (vh * 0.5 - rect.top - RAIL_TOP) / span));
+      const ballY = rect.top + RAIL_TOP + ratio * span;
+      track.querySelectorAll('[data-xp-item]').forEach((el, i) => {
+        if (el.getBoundingClientRect().top + 30 <= ballY) active = i;
+      });
+    }
+    ratio = Math.round(ratio * 1000) / 1000;
+    setProgress((prev) => (prev.ratio === ratio && prev.active === active ? prev : { ratio, active }));
+  }, []);
 
   useEffect(() => {
-    const unsubscribe = scrollYProgress.on('change', (latest) => {
-      const totalJobs = bioInfo.experience.length;
-      const index = Math.min(
-        Math.floor(latest * totalJobs),
-        totalJobs - 1
-      );
-      setActiveIndex(Math.max(0, index));
-    });
-    return () => unsubscribe();
-  }, [scrollYProgress]);
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        measure();
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    measure();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [measure]);
+
+  // Expanding a card changes the rail length, so re-measure after it renders.
+  useEffect(() => {
+    measure();
+  }, [expanded, measure]);
 
   return (
-    <section id="experience" className="py-16 sm:py-20 md:py-32 bg-background relative">
-      {/* Subtle background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.02] to-transparent pointer-events-none" />
-
-      <div className="container px-4 mx-auto max-w-5xl relative z-10">
-        {/* Header */}
-        <motion.div
-          className="mb-12 sm:mb-16 md:mb-20"
-          initial={{ opacity: 0, y: 30, filter: 'blur(4px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.7 }}
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px w-12 bg-primary" />
-            <span className="text-xs font-bold font-mono text-primary uppercase tracking-[0.2em]">
-              Career
-            </span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-foreground mb-4 font-heading">
-            WORK EXPERIENCE
-          </h2>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-xl font-sans leading-relaxed">
-            A journey through roles that shaped my engineering craft — from cybersecurity internships to leading AI education.
+    <section id="experience">
+      <div className="pf-container section-pad flex flex-wrap gap-x-[72px] gap-y-12">
+        <div className="flex-[1_1_300px] flex flex-col gap-[18px]">
+          <Kicker>Career</Kicker>
+          <h2 className="h2-section">Work experience</h2>
+          <p className="m-0 text-[17px] text-muted">
+            A journey through roles that shaped my engineering craft — from cybersecurity internships to leading AI
+            education.
           </p>
-        </motion.div>
+          <a href={RESUME_URL} download={RESUME_FILENAME} className="link-accent mt-2 self-start">
+            Download full resume
+            <Icon name="arrow-up-right" size={16} strokeWidth={2} />
+          </a>
+        </div>
 
-        {/* Timeline */}
-        <div ref={containerRef} className="relative">
-          {/* Timeline Track */}
-          <div className="absolute left-4 sm:left-6 md:left-8 top-0 bottom-0 w-[2px] bg-gradient-to-b from-border via-border to-transparent rounded-full" />
+        <ol
+          ref={trackRef}
+          className="flex-[999_1_640px] min-w-0 relative m-0 pl-10 list-none flex flex-col gap-4"
+        >
+          <span aria-hidden="true" className="absolute left-2 top-[39px] bottom-6 w-0.5 rounded-sm bg-line">
+            <span
+              className="absolute left-0 top-0 w-0.5 rounded-sm bg-accent transition-[height] [transition-duration:120ms] ease-linear"
+              style={{ height: `${progress.ratio * 100}%` }}
+            />
+          </span>
 
-          {/* Animated fill line */}
-          <motion.div
-            className="absolute left-4 sm:left-6 md:left-8 top-0 w-[2px] rounded-full origin-top"
+          {jobs.map((job, i) => {
+            const isActive = i === progress.active;
+            const reached = i <= progress.active;
+            const isOpen = expanded === i;
+            return (
+              <li key={`${job.role}-${job.period}`} data-xp-item="true" className="relative">
+                <span
+                  aria-hidden="true"
+                  className={`absolute -left-10 top-[30px] w-[18px] h-[18px] box-border rounded-full border-2 transition-colors [transition-duration:250ms] ${
+                    reached ? 'bg-accent border-accent' : 'bg-bg border-line-2'
+                  }`}
+                />
+                <article
+                  className={`px-7 py-6 border rounded-2xl bg-surface transition-[border-color,box-shadow] duration-300 ${
+                    isActive ? 'border-accent shadow-[0_30px_60px_-40px_rgba(59,130,246,0.6)]' : 'border-line'
+                  }`}
+                >
+                  <div className="flex flex-wrap justify-between items-center gap-2.5">
+                    <span className="font-mono text-[12px] font-bold tracking-[0.08em] uppercase text-muted">
+                      {job.period}
+                    </span>
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-[3px] rounded-full border font-mono text-[11px] font-bold tracking-[0.08em] uppercase ${
+                        job.current
+                          ? 'bg-accent-soft border-transparent text-accent-text'
+                          : 'bg-transparent border-line-2 text-muted'
+                      }`}
+                    >
+                      {job.badge}
+                    </span>
+                  </div>
+                  <h3 className="mt-3 mb-0.5 font-heading font-semibold text-[22px] leading-[1.25] tracking-[-0.015em]">
+                    {job.role}
+                  </h3>
+                  <p className="m-0 text-[15px] font-semibold text-accent-text">{job.company}</p>
+                  <p className="mt-2.5 mb-0 text-[15px] text-muted">{job.description}</p>
+                  <button
+                    type="button"
+                    onClick={() => setExpanded(isOpen ? -1 : i)}
+                    aria-expanded={isOpen}
+                    className="mt-2.5 inline-flex items-center gap-2 min-h-[44px] p-0 border-0 bg-transparent text-muted font-mono text-[11px] font-bold tracking-[0.12em] uppercase cursor-pointer"
+                  >
+                    {isOpen ? 'Hide achievements' : 'Key achievements'}
+                    <Icon
+                      name="chevron-down"
+                      size={14}
+                      strokeWidth={2}
+                      className="transition-transform duration-200"
+                      style={{ transform: `rotate(${isOpen ? 180 : 0}deg)` }}
+                    />
+                  </button>
+                  {isOpen && (
+                    <ul className="mt-1 mb-0 pt-4 border-t border-line list-none pl-0 flex flex-col gap-2.5 text-[15px]">
+                      {job.achievements.map((text) => (
+                        <li key={text} className="flex gap-3">
+                          <span className="flex-none w-[5px] h-[5px] mt-2.5 rounded-full bg-accent" />
+                          <span>{text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </article>
+              </li>
+            );
+          })}
+
+          <span
+            aria-hidden="true"
+            className="absolute left-[9px] w-[18px] h-[18px] box-border -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent border-[3px] border-bg transition-[top] [transition-duration:120ms] ease-linear"
             style={{
-              height: ballProgress,
-              background: 'linear-gradient(180deg, hsl(var(--primary)), hsl(var(--primary) / 0.3))',
+              top: `calc(${RAIL_TOP}px + (100% - ${RAIL_INSET}px) * ${progress.ratio})`,
+              boxShadow: '0 0 0 4px var(--accent-soft), 0 0 22px rgba(59, 130, 246, 0.75)',
             }}
           />
-
-          {/* Scrolling Ball */}
-          <motion.div
-            className="absolute left-4 sm:left-6 md:left-8 -translate-x-1/2 z-20"
-            style={{ top: ballProgress }}
-          >
-            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primary border-[3px] border-background glow-pulse" />
-          </motion.div>
-
-          {/* Experience Items */}
-          <div className="space-y-6 sm:space-y-8 md:space-y-10 relative">
-            {bioInfo.experience.map((job, index) => {
-              const config = typeConfig[job.type] || typeConfig.contract;
-              const RoleIcon = getRoleIcon(job.role);
-              const isActive = activeIndex === index;
-              const isPast = activeIndex > index;
-              const isExpanded = expandedIndex === index;
-
-              return (
-                <motion.div
-                  key={index}
-                  className="relative pl-10 sm:pl-14 md:pl-20"
-                  variants={cardVariants}
-                  custom={index}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: '-60px' }}
-                >
-                  {/* Timeline Node */}
-                  <div
-                    className={`absolute left-[10px] sm:left-[16px] md:left-[24px] top-6 sm:top-7 z-10 transition-all duration-500 ${
-                      isPast || isActive ? 'scale-100' : 'scale-75 opacity-50'
-                    }`}
-                  >
-                    <div
-                      className={`w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border-[2.5px] transition-all duration-500 ${
-                        isActive
-                          ? 'border-primary bg-primary/30 scale-125 shadow-lg shadow-primary/30'
-                          : isPast
-                            ? 'border-primary bg-primary/20'
-                            : 'border-muted-foreground/30 bg-background'
-                      }`}
-                    />
-                  </div>
-
-                  {/* Card */}
-                  <motion.div
-                    className={`group relative rounded-xl sm:rounded-2xl border overflow-hidden transition-all duration-500 cursor-pointer ${
-                      isActive
-                        ? `border-primary/30 bg-card shadow-xl ${config.glow}`
-                        : 'border-border bg-card/80 hover:border-primary/20 hover:shadow-lg'
-                    }`}
-                    whileHover={{
-                      y: -4,
-                      transition: { type: 'spring', stiffness: 300, damping: 20 },
-                    }}
-                    onClick={() => setExpandedIndex(isExpanded ? null : index)}
-                  >
-                    {/* Top accent bar */}
-                    <div
-                      className={`h-[3px] w-full transition-all duration-500 ${
-                        isActive
-                          ? 'bg-gradient-to-r from-primary via-primary/80 to-transparent'
-                          : 'bg-gradient-to-r from-border/50 to-transparent'
-                      }`}
-                    />
-
-                    <div className="p-4 sm:p-6 md:p-8">
-                      {/* Top Row: Period + Type + Icon */}
-                      <div className="flex items-start justify-between gap-3 mb-4 sm:mb-5">
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                          {/* Period */}
-                          <div className="flex items-center gap-1.5">
-                            <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-muted-foreground/60" />
-                            <span className="text-[10px] sm:text-xs font-bold font-mono text-muted-foreground uppercase tracking-wider">
-                              {job.period}
-                            </span>
-                          </div>
-
-                          {/* Type Badge */}
-                          <span className={`inline-flex items-center gap-1.5 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] uppercase font-bold tracking-wider border ${config.bg} ${config.text} ${config.border}`}>
-                            <config.icon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                            {config.label}
-                          </span>
-                        </div>
-
-                        {/* Role Icon */}
-                        <div className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 ${
-                          isActive
-                            ? 'bg-primary/10 text-primary'
-                            : 'bg-secondary text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'
-                        }`}>
-                          <RoleIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </div>
-                      </div>
-
-                      {/* Role Title */}
-                      <h3 className={`text-lg sm:text-xl md:text-2xl font-bold font-heading mb-1.5 transition-colors duration-300 ${
-                        isActive ? 'text-foreground' : 'text-foreground/90 group-hover:text-foreground'
-                      }`}>
-                        {job.role}
-                      </h3>
-
-                      {/* Company */}
-                      <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                        <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground/60" />
-                        <span className={`text-sm sm:text-base font-semibold transition-colors duration-300 ${
-                          isActive ? 'text-primary' : 'text-primary/70 group-hover:text-primary'
-                        }`}>
-                          {job.company}
-                        </span>
-                      </div>
-
-                      {/* Description */}
-                      <p className="text-muted-foreground leading-relaxed text-sm sm:text-[15px] font-sans">
-                        {job.description}
-                      </p>
-
-                      {/* Achievements — Expandable */}
-                      <AnimatePresence>
-                        {(isExpanded || isActive) && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-                            className="overflow-hidden"
-                          >
-                            <div className="pt-4 sm:pt-5 mt-4 sm:mt-5 border-t border-border/50">
-                              <span className="text-[10px] sm:text-xs font-bold font-mono text-muted-foreground/60 uppercase tracking-wider mb-3 block">
-                                Key Achievements
-                              </span>
-                              <ul className="space-y-2.5 sm:space-y-3">
-                                {job.achievements.map((achievement, i) => (
-                                  <motion.li
-                                    key={i}
-                                    className="flex items-start gap-2 sm:gap-3 text-xs sm:text-sm text-foreground/80"
-                                    variants={achievementVariants}
-                                    custom={i}
-                                    initial="hidden"
-                                    animate="visible"
-                                  >
-                                    <div className="mt-1.5 flex-shrink-0">
-                                      <div className={`w-1.5 h-1.5 rounded-full ${config.text.replace('text-', 'bg-')}`} />
-                                    </div>
-                                    <span className="leading-relaxed">{achievement}</span>
-                                  </motion.li>
-                                ))}
-                              </ul>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-
-                      {/* Expand hint */}
-                      {!isActive && !isExpanded && (
-                        <motion.div
-                          className="flex items-center gap-1.5 mt-4 text-[10px] sm:text-xs font-mono text-muted-foreground/50 uppercase tracking-wider"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.5 }}
-                        >
-                          <ArrowRight className="w-3 h-3" />
-                          <span>Tap to expand</span>
-                        </motion.div>
-                      )}
-                    </div>
-                  </motion.div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
+        </ol>
       </div>
     </section>
   );

@@ -14,7 +14,7 @@ export const ADDON_PRICE_CAP = 150;
 export const BUNDLE_DISCOUNT_PERCENT = 30;
 
 export const PRICING_DISCLAIMER =
-  'Estimates are provisional starting points for discussion. Final quotes depend on scope, design assets, integrations, and timeline. Individual add-ons are capped at $150; the Full Feature Bundle includes all add-ons at 30% off.';
+  'Estimates are provisional starting points for discussion. Final quotes depend on scope, design assets, integrations and timeline.';
 
 /**
  * Placeholder pricing — review and adjust before treating as official rates.
@@ -41,7 +41,7 @@ export const projectTypes: PricingOption[] = [
   {
     id: 'ecommerce',
     label: 'E-commerce',
-    description: 'Catalog, cart, and checkout-focused storefront with admin basics.',
+    description: 'Catalog, cart and checkout-focused storefront with admin basics.',
     basePrice: 5000,
   },
 ];

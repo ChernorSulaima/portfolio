@@ -1,86 +1,36 @@
-import React, { Suspense, lazy, useCallback, useState } from 'react';
-import Header from './components/Header';
-import type { QuoteSummary } from './types';
+import React, { Suspense, lazy, useLayoutEffect, useRef } from 'react';
+import Home from './pages/Home';
+import { scrollToHash, usePathname } from './lib/router';
 
-const Hero = lazy(() => import('./components/Hero'));
-const Experience = lazy(() => import('./components/Experience'));
-const Projects = lazy(() => import('./components/Projects'));
-const About = lazy(() => import('./components/About'));
-const Skills = lazy(() => import('./components/Skills'));
-const Services = lazy(() => import('./components/Services'));
-const Testimonials = lazy(() => import('./components/Testimonials'));
-const PricingCalculator = lazy(() => import('./components/PricingCalculator'));
-const Contact = lazy(() => import('./components/Contact'));
-const GitHubOverview = lazy(() => import('./components/GitHubOverview'));
-const Footer = lazy(() => import('./components/Footer'));
-
-const LoadingSpinner = () => (
-  <div className="flex items-center justify-center min-h-[200px]">
-    <div className="relative w-16 h-16">
-      <div className="absolute top-0 left-0 w-full h-full border-4 border-primary/20 rounded-full"></div>
-      <div className="absolute top-0 left-0 w-full h-full border-4 border-primary rounded-full animate-spin border-t-transparent"></div>
-    </div>
-  </div>
-);
+const CASE_STUDIES: Record<string, React.LazyExoticComponent<React.FC>> = {
+  '/work/gloze-skincare': lazy(() => import('./pages/case-studies/GlozeCaseStudy')),
+  '/work/airpay': lazy(() => import('./pages/case-studies/AirpayCaseStudy')),
+  '/work/nakam-gaming': lazy(() => import('./pages/case-studies/NakamCaseStudy')),
+  '/work/sahid': lazy(() => import('./pages/case-studies/SahidCaseStudy')),
+};
 
 const App: React.FC = () => {
-  const [quoteMessage, setQuoteMessage] = useState('');
-  const [quoteKey, setQuoteKey] = useState(0);
+  const pathname = usePathname().replace(/\/+$/, '') || '/';
+  const CaseStudy = CASE_STUDIES[pathname];
+  const firstRender = useRef(true);
 
-  const handleRequestQuote = useCallback((_summary: QuoteSummary, message: string) => {
-    setQuoteMessage(message);
-    setQuoteKey((key) => key + 1);
-    const contactSection = document.getElementById('contact');
-    contactSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, []);
+  // New page: jump to the requested section (e.g. "/#contact" from a case study), otherwise to the top.
+  // On the first render, leave the browser's own scroll restoration alone unless there is a hash.
+  useLayoutEffect(() => {
+    const isFirst = firstRender.current;
+    firstRender.current = false;
+    if (!scrollToHash(window.location.hash) && !isFirst) window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-x-hidden">
-      <Header />
-      <main className="flex-grow">
-        <Suspense fallback={<LoadingSpinner />}>
-          <Hero />
+    <div className="min-h-screen flex flex-col bg-bg text-fg overflow-x-clip">
+      {CaseStudy ? (
+        <Suspense fallback={<div className="min-h-screen" />}>
+          <CaseStudy />
         </Suspense>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <Experience />
-        </Suspense>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <Projects />
-        </Suspense>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <About />
-        </Suspense>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <Skills />
-        </Suspense>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <Services />
-        </Suspense>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <Testimonials />
-        </Suspense>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <PricingCalculator onRequestQuote={handleRequestQuote} />
-        </Suspense>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <Contact initialMessage={quoteMessage} quoteKey={quoteKey} />
-        </Suspense>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <GitHubOverview />
-        </Suspense>
-      </main>
-      <Suspense fallback={<LoadingSpinner />}>
-        <Footer />
-      </Suspense>
+      ) : (
+        <Home />
+      )}
     </div>
   );
 };

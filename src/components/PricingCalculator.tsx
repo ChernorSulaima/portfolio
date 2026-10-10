@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import { Calculator, Check, RotateCcw, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import Kicker from './ui/Kicker';
+import Icon from './ui/Icon';
 import type { QuoteSummary } from '../types';
 import {
   BUNDLE_DISCOUNT_PERCENT,
@@ -9,8 +9,8 @@ import {
   buildQuoteMessage,
   calculateQuoteTotal,
   formatPrice,
-  nextAddOnSelection,
-  pricingAddOns,
+  fullFeatureBundle,
+  individualAddOns,
   projectTypes,
   timelineOptions,
 } from '../data/pricingData';
@@ -19,37 +19,43 @@ interface PricingCalculatorProps {
   onRequestQuote: (summary: QuoteSummary, message: string) => void;
 }
 
+const STEP_LABEL = 'eyebrow';
+const OPTION = 'border rounded-[14px] text-fg text-left cursor-pointer';
+const optionState = (on: boolean) => (on ? 'border-accent bg-accent-soft' : 'border-line-2 bg-surface');
+
+const Checkbox: React.FC<{ on: boolean }> = ({ on }) => (
+  <span
+    className={`flex-none grid place-items-center w-[22px] h-[22px] box-border rounded-md border-[1.5px] text-white ${
+      on ? 'border-accent bg-accent' : 'border-line-2 bg-transparent'
+    }`}
+  >
+    {on && <Icon name="check" size={14} strokeWidth={3} />}
+  </span>
+);
+
 const PricingCalculator: React.FC<PricingCalculatorProps> = ({ onRequestQuote }) => {
-  const prefersReducedMotion = useReducedMotion();
-  const [projectTypeId, setProjectTypeId] = useState(projectTypes[0].id);
-  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const [projectTypeId, setProjectTypeId] = useState('web-app');
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>(['auth']);
+  const [bundle, setBundle] = useState(false);
   const [timelineId, setTimelineId] = useState(timelineOptions[0].id);
 
   const projectType = projectTypes.find((p) => p.id === projectTypeId) ?? projectTypes[0];
   const timeline = timelineOptions.find((t) => t.id === timelineId) ?? timelineOptions[0];
-  const activeAddOns = pricingAddOns.filter((a) => selectedAddOns.includes(a.id));
-
-  const { subtotal, total } = useMemo(
-    () =>
-      calculateQuoteTotal(
-        projectType.basePrice,
-        activeAddOns.map((a) => a.price),
-        timeline.multiplier
-      ),
-    [projectType.basePrice, activeAddOns, timeline.multiplier]
+  const rush = timeline.multiplier !== 1;
+  // The bundle includes every add-on at a discount, so it replaces any individual picks.
+  const activeAddOns = bundle
+    ? [fullFeatureBundle]
+    : individualAddOns.filter((a) => selectedAddOns.includes(a.id));
+  const addOnTotal = activeAddOns.reduce((sum, a) => sum + a.price, 0);
+  const { subtotal, total } = calculateQuoteTotal(
+    projectType.basePrice,
+    activeAddOns.map((a) => a.price),
+    timeline.multiplier
   );
-
   const formattedTotal = formatPrice(total);
 
-  const toggleAddOn = (id: string) => {
-    setSelectedAddOns((prev) => nextAddOnSelection(prev, id));
-  };
-
-  const handleReset = () => {
-    setProjectTypeId(projectTypes[0].id);
-    setSelectedAddOns([]);
-    setTimelineId(timelineOptions[0].id);
-  };
+  const toggleAddOn = (id: string) =>
+    setSelectedAddOns((prev) => (prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]));
 
   const handleRequestQuote = () => {
     const summary: QuoteSummary = {
@@ -64,7 +70,6 @@ const PricingCalculator: React.FC<PricingCalculatorProps> = ({ onRequestQuote })
       currency: PRICING_CURRENCY,
       formattedTotal,
     };
-
     onRequestQuote(
       summary,
       buildQuoteMessage({
@@ -76,245 +81,162 @@ const PricingCalculator: React.FC<PricingCalculatorProps> = ({ onRequestQuote })
     );
   };
 
-  const motionProps = prefersReducedMotion
-    ? {}
-    : {
-        initial: { opacity: 0, y: 24 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: '-80px' },
-        transition: { duration: 0.6 },
-      };
-
   return (
-    <section id="pricing" className="py-16 sm:py-20 md:py-32 bg-background border-t border-border">
-      <div className="container px-4 mx-auto max-w-6xl">
-        <motion.div className="text-center mb-10 sm:mb-16 space-y-3 sm:space-y-4" {...motionProps}>
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-mono uppercase tracking-wider text-muted-foreground">
-            <Calculator className="h-3.5 w-3.5" />
-            Interactive estimate
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground font-heading tracking-tight">
-            PRICING CALCULATOR
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-sans leading-relaxed">
-            Configure your project type, add-ons, and timeline to get a starting estimate — then request a detailed quote.
+    <section id="pricing" className="border-t border-line">
+      <div className="pf-container section-pad flex flex-col gap-12">
+        <div className="flex flex-col gap-[18px] max-w-[620px]">
+          <Kicker>Pricing</Kicker>
+          <h2 className="h2-section">Estimate your project</h2>
+          <p className="m-0 text-[17px] text-muted">
+            Choose a project type, add the features you need and see a provisional starting price.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-          <motion.div className="lg:col-span-2 space-y-6 sm:space-y-8" {...motionProps}>
-            {/* Project type */}
-            <fieldset>
-              <legend className="text-xs font-bold font-mono uppercase tracking-wider text-muted-foreground mb-3">
-                Project type
-              </legend>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="radiogroup" aria-label="Project type">
-                {projectTypes.map((option) => {
-                  const selected = option.id === projectTypeId;
+        <div className="flex flex-wrap items-start gap-8">
+          <div className="flex-[999_1_560px] min-w-0 flex flex-col gap-9">
+            <div className="flex flex-col gap-3.5">
+              <span className={STEP_LABEL}>01 — Project type</span>
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] gap-3">
+                {projectTypes.map((type) => {
+                  const on = type.id === projectType.id;
                   return (
                     <button
-                      key={option.id}
+                      key={type.id}
                       type="button"
-                      role="radio"
-                      aria-checked={selected}
-                      data-testid={`project-type-${option.id}`}
-                      onClick={() => setProjectTypeId(option.id)}
-                      className={`text-left rounded-xl border p-4 sm:p-5 transition-all min-h-[44px] ${
-                        selected
-                          ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
-                          : 'border-border bg-card hover:border-primary/40'
-                      }`}
+                      onClick={() => setProjectTypeId(type.id)}
+                      aria-pressed={on}
+                      data-testid={`project-type-${type.id}`}
+                      className={`${OPTION} ${optionState(on)} flex flex-col items-start gap-1.5 px-5 py-[18px]`}
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-bold font-heading text-foreground">{option.label}</p>
-                          <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                            {option.description}
-                          </p>
-                        </div>
-                        {selected && (
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                            <Check className="h-3.5 w-3.5" aria-hidden />
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-3 text-sm font-mono font-bold text-foreground">
-                        from {formatPrice(option.basePrice)}
-                      </p>
+                      <span className="flex w-full justify-between items-baseline gap-3">
+                        <span className="font-heading text-[18px] font-semibold">{type.label}</span>
+                        <span className="font-mono text-[13px] font-bold text-accent-text">
+                          {formatPrice(type.basePrice)}
+                        </span>
+                      </span>
+                      <span className="text-[14px] leading-[1.5] text-muted">{type.description}</span>
                     </button>
                   );
                 })}
               </div>
-            </fieldset>
+            </div>
 
-            {/* Add-ons */}
-            <fieldset>
-              <legend className="text-xs font-bold font-mono uppercase tracking-wider text-muted-foreground mb-3">
-                Add-on features
-              </legend>
-              <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-                Pick à la carte options (each ≤ $150) or save {BUNDLE_DISCOUNT_PERCENT}% with the Full Feature Bundle.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {pricingAddOns.map((addon) => {
-                  const selected = selectedAddOns.includes(addon.id);
-                  const listPrice = addon.isBundle
-                    ? Math.round(addon.price / (1 - BUNDLE_DISCOUNT_PERCENT / 100))
-                    : null;
+            <div className="flex flex-col gap-3.5">
+              <span className={STEP_LABEL}>02 — Add-ons</span>
+              <button
+                type="button"
+                onClick={() => setBundle((on) => !on)}
+                aria-pressed={bundle}
+                data-testid={`addon-${fullFeatureBundle.id}`}
+                className={`${OPTION} ${optionState(bundle)} flex items-center gap-4 px-5 py-[18px]`}
+              >
+                <Checkbox on={bundle} />
+                <span className="flex-1 flex flex-col">
+                  <span className="flex items-center gap-2.5 font-semibold">
+                    {fullFeatureBundle.label}
+                    <span className="px-2 py-0.5 rounded-full bg-accent-soft text-accent-text font-mono text-[11px] font-bold">
+                      {BUNDLE_DISCOUNT_PERCENT}% OFF
+                    </span>
+                  </span>
+                  <span className="text-[14px] text-muted">Auth, payments, admin dashboard and SEO together.</span>
+                </span>
+                <span className="font-mono text-[13px] font-bold">+{formatPrice(fullFeatureBundle.price)}</span>
+              </button>
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] gap-3">
+                {individualAddOns.map((addon) => {
+                  const on = bundle || selectedAddOns.includes(addon.id);
                   return (
                     <button
                       key={addon.id}
                       type="button"
-                      aria-pressed={selected}
-                      data-testid={`addon-${addon.id}`}
                       onClick={() => toggleAddOn(addon.id)}
-                      className={`text-left rounded-xl border p-4 sm:p-5 transition-all min-h-[44px] ${
-                        addon.isBundle ? 'sm:col-span-2' : ''
-                      } ${
-                        selected
-                          ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
-                          : 'border-border bg-card hover:border-primary/40'
-                      }`}
+                      disabled={bundle}
+                      aria-pressed={on}
+                      data-testid={`addon-${addon.id}`}
+                      className={`${OPTION} ${optionState(on)} flex items-center gap-3.5 px-[18px] py-4 disabled:cursor-default`}
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <div className="flex flex-wrap items-center gap-2">
-                            <p className="font-bold font-heading text-foreground">{addon.label}</p>
-                            {addon.isBundle && (
-                              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-primary">
-                                {BUNDLE_DISCOUNT_PERCENT}% off
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                            {addon.description}
-                          </p>
-                        </div>
-                        {selected && (
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                            <Check className="h-3.5 w-3.5" aria-hidden />
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-3 text-sm font-mono font-bold text-foreground">
-                        {listPrice !== null && (
-                          <span className="mr-2 text-muted-foreground line-through font-medium">
-                            {formatPrice(listPrice)}
-                          </span>
-                        )}
-                        + {formatPrice(addon.price)}
-                      </p>
+                      <Checkbox on={on} />
+                      <span className="flex-1 text-[15px] font-semibold">{addon.label}</span>
+                      <span className="font-mono text-[12px] font-bold text-muted">
+                        {bundle ? 'Included' : `+${formatPrice(addon.price)}`}
+                      </span>
                     </button>
                   );
                 })}
               </div>
-            </fieldset>
+            </div>
 
-            {/* Timeline */}
-            <fieldset>
-              <legend className="text-xs font-bold font-mono uppercase tracking-wider text-muted-foreground mb-3">
-                Timeline
-              </legend>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="radiogroup" aria-label="Timeline">
+            <div className="flex flex-col gap-3.5">
+              <span className={STEP_LABEL}>03 — Timeline</span>
+              <div
+                role="group"
+                aria-label="Timeline"
+                className="inline-flex self-start gap-1 p-1 border border-line-2 rounded-xl bg-surface"
+              >
                 {timelineOptions.map((option) => {
-                  const selected = option.id === timelineId;
+                  const on = option.id === timeline.id;
                   return (
                     <button
                       key={option.id}
                       type="button"
-                      role="radio"
-                      aria-checked={selected}
-                      data-testid={`timeline-${option.id}`}
                       onClick={() => setTimelineId(option.id)}
-                      className={`text-left rounded-xl border p-4 sm:p-5 transition-all min-h-[44px] ${
-                        selected
-                          ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
-                          : 'border-border bg-card hover:border-primary/40'
+                      aria-pressed={on}
+                      data-testid={`timeline-${option.id}`}
+                      className={`min-h-[44px] px-5 border-0 rounded-[9px] text-[14px] font-semibold cursor-pointer ${
+                        on ? 'bg-fg text-bg' : 'bg-transparent text-muted'
                       }`}
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-bold font-heading text-foreground">{option.label}</p>
-                          <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                            {option.description}
-                          </p>
-                        </div>
-                        {selected && (
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                            <Check className="h-3.5 w-3.5" aria-hidden />
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-3 text-sm font-mono font-bold text-foreground">
-                        {option.multiplier === 1 ? 'Base rate' : `×${option.multiplier}`}
-                      </p>
+                      {option.multiplier === 1 ? option.label : `${option.label} · ×${option.multiplier}`}
                     </button>
                   );
                 })}
               </div>
-            </fieldset>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* Summary panel */}
-          <motion.aside
-            className="lg:sticky lg:top-24 h-fit rounded-xl border border-border bg-card p-5 sm:p-6 shadow-sm"
-            {...motionProps}
+          <aside
+            aria-label="Estimate summary"
+            className="flex-[1_1_340px] sticky top-24 p-7 border border-line-2 rounded-[20px] bg-surface shadow-[0_40px_80px_-50px_var(--shadow)] flex flex-col gap-5"
           >
-            <h3 className="text-sm font-bold font-mono uppercase tracking-wider text-muted-foreground mb-4">
-              Estimate summary
-            </h3>
-
-            <dl className="space-y-3 text-sm font-sans">
-              <div className="flex justify-between gap-4">
-                <dt className="text-muted-foreground">Base</dt>
-                <dd className="font-mono font-bold text-foreground" data-testid="summary-base">
+            <span className="eyebrow">Estimated starting price</span>
+            <span
+              data-testid="summary-total"
+              aria-live="polite"
+              className="font-heading text-[56px] font-bold leading-none tracking-[-0.03em]"
+            >
+              {formattedTotal}
+            </span>
+            <dl className="m-0 flex flex-col gap-2.5 pt-[18px] border-t border-line text-[14px]">
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted">{projectType.label}</dt>
+                <dd data-testid="summary-base" className="m-0 font-mono font-medium">
                   {formatPrice(projectType.basePrice)}
                 </dd>
               </div>
-              <div className="flex justify-between gap-4">
-                <dt className="text-muted-foreground">Add-ons</dt>
-                <dd className="font-mono font-bold text-foreground" data-testid="summary-addons">
-                  {formatPrice(activeAddOns.reduce((sum, a) => sum + a.price, 0))}
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted">Add-ons</dt>
+                <dd data-testid="summary-addons" className="m-0 font-mono font-medium">
+                  {formatPrice(addOnTotal)}
                 </dd>
               </div>
-              <div className="flex justify-between gap-4">
-                <dt className="text-muted-foreground">Timeline</dt>
-                <dd className="font-mono font-bold text-foreground">{timeline.label}</dd>
-              </div>
-              <div className="border-t border-border pt-3 flex justify-between gap-4 items-baseline">
-                <dt className="font-bold text-foreground">Estimated total</dt>
-                <dd
-                  className="text-2xl font-extrabold font-heading text-primary"
-                  data-testid="summary-total"
-                >
-                  {formattedTotal}
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted">Timeline</dt>
+                <dd className="m-0 font-mono font-medium">
+                  {rush ? `${timeline.label} ×${timeline.multiplier}` : `${timeline.label} ×1`}
                 </dd>
               </div>
             </dl>
-
-            <p className="mt-4 text-xs text-muted-foreground leading-relaxed">{PRICING_DISCLAIMER}</p>
-
-            <div className="mt-6 flex flex-col gap-3">
-              <button
-                type="button"
-                data-testid="request-quote"
-                onClick={handleRequestQuote}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-foreground text-background py-3.5 px-4 font-bold uppercase tracking-wide text-sm min-h-[44px] hover:opacity-90 transition-opacity"
-              >
-                Get Detailed Quote
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </button>
-              <button
-                type="button"
-                data-testid="reset-quote"
-                onClick={handleReset}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background py-3 px-4 font-bold uppercase tracking-wide text-xs text-muted-foreground min-h-[44px] hover:text-foreground hover:border-primary/40 transition-colors"
-              >
-                <RotateCcw className="h-3.5 w-3.5" aria-hidden />
-                Reset
-              </button>
-            </div>
-          </motion.aside>
+            <button
+              type="button"
+              onClick={handleRequestQuote}
+              data-testid="request-quote"
+              className="flex justify-center items-center gap-2 min-h-[52px] rounded-xl border-0 bg-accent text-white font-semibold text-[15px] cursor-pointer hover:opacity-80"
+            >
+              Request this quote
+              <Icon name="arrow-right" size={16} strokeWidth={2} />
+            </button>
+            <p className="m-0 text-[12px] leading-[1.6] text-muted">{PRICING_DISCLAIMER}</p>
+          </aside>
         </div>
       </div>
     </section>

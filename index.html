@@ -20,7 +20,6 @@
     <title>Chernor Sulaiman Jalloh | Software Engineer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -47,13 +46,12 @@
     </script>
     <script>
       (function () {
+        // Dark is the default; only an explicit "light" choice switches it off.
+        var dark = true;
         try {
-          var stored = localStorage.getItem('portfolio-theme');
-          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (stored === 'dark' || (!stored && prefersDark)) {
-            document.documentElement.classList.add('dark');
-          }
+          dark = localStorage.getItem('portfolio-theme') !== 'light';
         } catch (e) {}
+        if (dark) document.documentElement.classList.add('dark');
       })();
     </script>
   </head>

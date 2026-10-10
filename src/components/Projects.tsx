@@ -1,248 +1,103 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
+import Kicker from './ui/Kicker';
+import Icon from './ui/Icon';
+import Link from './ui/Link';
+import ProjectVisual from './ProjectVisual';
 import { projects } from '../data/personalData';
-import { ArrowUpRight, ChevronRight, Lock } from 'lucide-react';
-import { Project } from '../types';
 
-const techBadgeVariants = {
-  hidden: { opacity: 0, scale: 0.7 },
-  visible: (i: number) => ({
-    opacity: 1,
-    scale: 1,
-    transition: {
-      delay: 0.4 + i * 0.06,
-      type: 'spring',
-      stiffness: 200,
-      damping: 15,
-    },
-  }),
-};
-
-const Projects: React.FC = () => {
-  return (
-    <section id="projects" className="py-16 sm:py-20 md:py-32 bg-background">
-      <div className="container px-4 mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.div
-          className="mb-12 sm:mb-16 md:mb-20"
-          initial={{ opacity: 0, y: 30, filter: 'blur(4px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.7 }}
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px w-12 bg-primary" />
-            <span className="text-xs font-bold font-mono text-primary uppercase tracking-[0.2em]">
-              Portfolio
-            </span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight text-foreground mb-4 font-heading">
-            SELECTED WORKS
-          </h2>
-          <p className="text-base sm:text-lg text-muted-foreground font-sans leading-relaxed max-w-xl">
+const Projects: React.FC = () => (
+  <section id="projects" className="border-t border-line">
+    <div className="pf-container section-pad">
+      <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-5 mb-6">
+        <div className="flex flex-col gap-[18px] max-w-[620px]">
+          <Kicker>Portfolio</Kicker>
+          <h2 className="h2-section">Selected works</h2>
+          <p className="m-0 text-[17px] text-muted">
             Real-world applications built for real businesses — from procurement platforms to gaming arenas.
           </p>
-        </motion.div>
-      </div>
-
-      {/* Project Cards — Alternating Layout */}
-      <div className="space-y-0">
-        {projects.map((project, index) => (
-          <ProjectShowcase key={project.id} project={project} index={index} />
-        ))}
-      </div>
-
-      {/* NDA Section */}
-      <div className="container px-4 mx-auto max-w-6xl mt-12 sm:mt-20">
-        <motion.div
-          className="rounded-2xl border border-border bg-card/50 backdrop-blur p-6 sm:p-8 md:p-10 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center"
-          initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="p-3 sm:p-4 bg-primary/10 border border-primary/20 rounded-2xl text-primary shrink-0">
-            <Lock className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-base sm:text-lg font-bold font-mono text-foreground uppercase tracking-wide">
-              + More Under NDA
-            </h3>
-            <p className="text-muted-foreground font-sans text-sm sm:text-base leading-relaxed">
-              I've built <strong>7+ additional projects</strong> for clients under strict NDAs — SaaS platforms, internal dashboards, and enterprise tools that can't be publicly showcased.
-            </p>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-// Individual project showcase — alternating image/content sides
-const ProjectShowcase: React.FC<{ project: Project; index: number }> = ({ project, index }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const isEven = index % 2 === 0;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.8 }}
-    >
-      <a
-        href={project.liveUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div className="container px-4 mx-auto max-w-7xl">
-          <div className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-6 sm:gap-8 lg:gap-16 py-10 sm:py-16 md:py-24 border-t border-border`}>
-            {/* Image Side */}
-            <motion.div
-              className="w-full lg:w-[58%] relative"
-              initial={{ opacity: 0, x: isEven ? -60 : 60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.8, ease: [0.25, 0.1, 0, 1] }}
-            >
-              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-muted aspect-video shadow-2xl shadow-black/10">
-                {/* Gradient overlay on hover */}
-                <motion.div
-                  className="absolute inset-0 z-10 bg-gradient-to-t from-black/40 via-transparent to-transparent"
-                  animate={{ opacity: isHovered ? 1 : 0 }}
-                  transition={{ duration: 0.4 }}
-                />
-                <motion.img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover object-center"
-                  animate={{ scale: isHovered ? 1.05 : 1 }}
-                  transition={{ duration: 0.7, ease: [0.25, 0.1, 0, 1] }}
-                />
-                {/* Visit button on hover */}
-                <motion.div
-                  className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-20 flex items-center gap-2"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-                  transition={{ duration: 0.4, delay: 0.1 }}
-                >
-                  <span className="px-4 py-2 sm:px-5 sm:py-2.5 bg-white text-black text-xs sm:text-sm font-bold font-mono uppercase tracking-wider rounded-full flex items-center gap-2 shadow-lg">
-                    Visit Live Site
-                    <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  </span>
-                </motion.div>
-              </div>
-
-              {/* Floating project number */}
-              <motion.div
-                className={`absolute -top-6 ${isEven ? '-right-4 lg:-right-8' : '-left-4 lg:-left-8'} z-20 hidden lg:block`}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                <span className="text-8xl font-black font-heading text-primary/10 select-none animate-slow-pulse">
-                  0{index + 1}
-                </span>
-              </motion.div>
-            </motion.div>
-
-            {/* Content Side */}
-            <motion.div
-              className="w-full lg:w-[42%] space-y-4 sm:space-y-6"
-              initial={{ opacity: 0, x: isEven ? 40 : -40, filter: 'blur(4px)' }}
-              whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.1, 0, 1] }}
-            >
-              {/* Category */}
-              <motion.span
-                className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-primary/10 text-primary text-[10px] sm:text-[11px] font-bold font-mono uppercase tracking-[0.15em]"
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-              >
-                {project.category}
-              </motion.span>
-
-              {/* Title */}
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold font-heading text-foreground group-hover:text-primary transition-colors duration-300 leading-tight">
-                {project.title}
-              </h3>
-
-              {/* Description */}
-              <p className="text-muted-foreground font-sans text-sm sm:text-base md:text-lg leading-relaxed">
-                {project.description}
-              </p>
-
-              {/* Problem → Solution */}
-              <div className="space-y-3 sm:space-y-4 pt-1 sm:pt-2">
-                <div className="flex gap-3">
-                  <div className="w-1 rounded-full bg-red-400/30 shrink-0" />
-                  <div>
-                    <p className="text-[10px] sm:text-[11px] font-bold font-mono text-red-400 uppercase tracking-wider mb-1">Challenge</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{project.problem}</p>
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <div className="w-1 rounded-full bg-emerald-400/30 shrink-0" />
-                  <div>
-                    <p className="text-[10px] sm:text-[11px] font-bold font-mono text-emerald-400 uppercase tracking-wider mb-1">Solution</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{project.solution}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Key Features */}
-              {project.keyFeatures && (
-                <div className="flex flex-wrap gap-2 pt-1 sm:pt-2">
-                  {project.keyFeatures.map((feature) => (
-                    <span
-                      key={feature}
-                      className="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-xs text-foreground/70 font-medium"
-                    >
-                      <ChevronRight className="w-3 h-3 text-primary" />
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {/* Tech Stack */}
-              <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-1 sm:pt-2">
-                {project.technologies.map((tech, i) => (
-                  <motion.span
-                    key={tech}
-                    className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-secondary/80 text-secondary-foreground text-[10px] sm:text-[11px] font-bold font-mono uppercase tracking-tight border border-border/50"
-                    variants={techBadgeVariants}
-                    custom={i}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                  >
-                    {tech}
-                  </motion.span>
-                ))}
-              </div>
-
-              {/* CTA */}
-              <motion.div
-                className="flex items-center gap-2 text-primary font-bold font-mono text-xs sm:text-sm uppercase tracking-wider pt-1 sm:pt-2 group-hover:gap-3 transition-all duration-300"
-                animate={{ x: isHovered ? 4 : 0 }}
-              >
-                <span>View Project</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </motion.div>
-            </motion.div>
-          </div>
         </div>
-      </a>
-    </motion.div>
-  );
-};
+        <span className="font-mono text-[12px] font-bold tracking-[0.08em] uppercase text-muted">
+          04 featured · 07+ under NDA
+        </span>
+      </div>
+
+      {projects.map((project, i) => (
+        <article
+          key={project.number}
+          className={`flex flex-wrap items-center gap-x-16 gap-y-10 py-14 border-t border-line ${
+            i % 2 === 1 ? 'flex-row-reverse' : ''
+          }`}
+        >
+          <ProjectVisual project={project} className="flex-[999_1_560px] min-w-0" />
+
+          <div className="flex-[1_1_360px] flex flex-col gap-[18px]">
+            <div className="flex items-center gap-3 font-mono text-[12px] font-bold tracking-[0.14em] uppercase">
+              <span className="text-accent-text">{project.number}</span>
+              <span className="w-6 h-px bg-line-2" />
+              <span className="text-muted">{project.category}</span>
+            </div>
+            <h3 className="m-0 font-heading font-semibold text-[36px] leading-[1.1] tracking-[-0.025em]">
+              {project.title}
+            </h3>
+            <p className="m-0 text-[16px] text-muted">{project.description}</p>
+            <dl className="m-0 flex flex-col text-[15px]">
+              <div className="py-3.5 border-t border-line">
+                <dt className="eyebrow">Challenge</dt>
+                <dd className="mt-1 mb-0 ml-0">{project.challenge}</dd>
+              </div>
+              <div className="py-3.5 border-y border-line">
+                <dt className="eyebrow">Solution</dt>
+                <dd className="mt-1 mb-0 ml-0">{project.solution}</dd>
+              </div>
+            </dl>
+            <p className="m-0 font-mono text-[12px] text-muted">{project.stack}</p>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+              <Link to={project.caseStudyPath} className="link-accent">
+                Read case study
+                <Icon name="arrow-right" size={16} strokeWidth={2} />
+              </Link>
+              {project.status && (
+                <span className="status-pill">
+                  <span className="w-[7px] h-[7px] rounded-full bg-[#22C55E]" />
+                  {project.status}
+                </span>
+              )}
+              {project.liveUrl && (
+                <a href={project.liveUrl} className="inline-flex items-center gap-1.5 min-h-[44px] text-[15px] font-semibold">
+                  Visit live site
+                  <Icon name="arrow-up-right" size={16} strokeWidth={2} />
+                </a>
+              )}
+              {project.githubUrl && (
+                <a href={project.githubUrl} className="inline-flex items-center gap-1.5 min-h-[44px] text-[15px] font-semibold">
+                  GitHub
+                  <Icon name="arrow-up-right" size={16} strokeWidth={2} />
+                </a>
+              )}
+            </div>
+          </div>
+        </article>
+      ))}
+
+      <div className="flex flex-wrap items-center gap-x-7 gap-y-5 px-8 py-7 border border-line rounded-2xl bg-surface">
+        <span className="icon-tile !w-12 !h-12">
+          <Icon name="lock" size={20} />
+        </span>
+        <div className="flex-[1_1_400px]">
+          <h3 className="m-0 font-heading font-semibold text-[19px]">7+ more projects under NDA</h3>
+          <p className="mt-0.5 mb-0 text-[15px] text-muted">
+            SaaS platforms, internal dashboards and enterprise tools built for clients that can’t be shown publicly.
+          </p>
+        </div>
+        <a
+          href="#contact"
+          className="inline-flex items-center min-h-[44px] px-[18px] rounded-xl border border-line-2 text-[14px] font-semibold"
+        >
+          Ask about them
+        </a>
+      </div>
+    </div>
+  </section>
+);
 
 export default Projects;

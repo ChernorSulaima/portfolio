@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import Kicker from './ui/Kicker';
+import Icon from './ui/Icon';
 import { WHATSAPP_PHONE } from '../data/pricingData';
+import { contactInfo } from '../data/personalData';
 
 interface FormData {
   name: string;
@@ -14,30 +15,24 @@ interface ContactProps {
   quoteKey?: number;
 }
 
+const FIELD = 'border rounded-xl bg-surface text-fg text-[15px] font-[inherit]';
+
 const Contact: React.FC<ContactProps> = ({ initialMessage = '', quoteKey = 0 }) => {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    message: initialMessage,
-  });
-  const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<FormData>({ name: '', email: '', message: initialMessage });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const messageRef = useRef<HTMLTextAreaElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
+  // A quote request from the pricing calculator prefills (and focuses) the message.
   useEffect(() => {
     if (quoteKey > 0 && initialMessage) {
       setFormData((prev) => ({ ...prev, message: initialMessage }));
-      window.requestAnimationFrame(() => {
-        messageRef.current?.focus();
-      });
+      window.requestAnimationFrame(() => messageRef.current?.focus({ preventScroll: true }));
     }
   }, [quoteKey, initialMessage]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name as keyof FormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
@@ -56,247 +51,146 @@ const Contact: React.FC<ContactProps> = ({ initialMessage = '', quoteKey = 0 }) 
     return Object.keys(next).length === 0;
   };
 
-  const handleWhatsApp = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!validate()) return;
-
-    setIsSubmitting(true);
     const text = [
       `Name: ${formData.name.trim()}`,
       `Email: ${formData.email.trim()}`,
       '',
       formData.message.trim(),
     ].join('\n');
-
-    const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
-
-    window.setTimeout(() => {
-      window.open(url, '_blank', 'noopener,noreferrer');
-      setIsSubmitting(false);
-    }, 300);
+    window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
   };
 
-  const contactDetails = [
-    {
-      icon: Mail,
-      title: 'Email',
-      content: 'Chernorsulaimanjalloh2025@gmail.com',
-      href: 'mailto:Chernorsulaimanjalloh2025@gmail.com',
-    },
-    {
-      icon: Phone,
-      title: 'Phone',
-      content: '+232 74 512 941',
-      href: `tel:+${WHATSAPP_PHONE}`,
-    },
-    {
-      icon: MapPin,
-      title: 'Location',
-      content: 'Freetown, Sierra Leone',
-    },
+  const fieldBorder = (field: keyof FormData) => (errors[field] ? 'border-danger' : 'border-line-2');
+
+  const details = [
+    { icon: 'mail' as const, label: 'Email', value: contactInfo.email, href: `mailto:${contactInfo.email}` },
+    { icon: 'phone' as const, label: 'Phone / WhatsApp', value: contactInfo.phoneDisplay, href: contactInfo.phoneHref },
+    { icon: 'map-pin' as const, label: 'Location', value: contactInfo.location },
   ];
 
   return (
-    <section id="contact" className="py-16 sm:py-20 md:py-32 bg-background border-t border-border">
-      <div className="container px-4 mx-auto max-w-5xl">
-        <motion.div
-          className="text-center mb-10 sm:mb-16 space-y-3 sm:space-y-4"
-          initial={{ opacity: 0, y: 30, filter: 'blur(4px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.7 }}
-        >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground font-heading tracking-tight">
-            GET IN TOUCH
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-sans leading-relaxed">
-            Have a project in mind or want to discuss modern web solutions? I'm available for freelance work.
+    <section id="contact" className="border-t border-line bg-surface">
+      <div className="pf-container section-pad flex flex-wrap gap-x-20 gap-y-12">
+        <div className="flex-[1_1_360px] flex flex-col gap-[22px]">
+          <Kicker>Contact</Kicker>
+          <h2 className="h2-section">Let’s build something great together.</h2>
+          <p className="m-0 text-[17px] text-muted">
+            Have a project in mind or just want to say hello? Send a message and I’ll get back to you with next steps.
           </p>
-        </motion.div>
-
-        <div className="flex flex-col items-center">
-          <motion.div
-            className="w-full max-w-2xl bg-card border border-border rounded-xl p-5 sm:p-8 md:p-10 shadow-sm mb-10 sm:mb-16"
-            initial={{ opacity: 0, y: 30, filter: 'blur(4px)' }}
-            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            <form
-              className="space-y-5 sm:space-y-6"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleWhatsApp();
-              }}
-              noValidate
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
-                <div className="space-y-2 relative">
-                  <label
-                    htmlFor="contact-name"
-                    className={`text-xs font-bold font-mono uppercase tracking-wider transition-colors duration-300 ${
-                      focusedField === 'name' ? 'text-primary' : 'text-muted-foreground'
-                    }`}
-                  >
-                    Name
-                  </label>
-                  <input
-                    id="contact-name"
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('name')}
-                    onBlur={() => setFocusedField(null)}
-                    aria-invalid={Boolean(errors.name)}
-                    aria-describedby={errors.name ? 'contact-name-error' : undefined}
-                    className={`w-full px-4 py-3 bg-background border rounded-lg outline-none transition-all duration-300 font-sans ${
-                      focusedField === 'name'
-                        ? 'border-primary ring-2 ring-primary/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]'
-                        : errors.name
-                          ? 'border-red-500'
-                          : 'border-border'
-                    }`}
-                    placeholder="John Doe"
-                  />
-                  {errors.name && (
-                    <p id="contact-name-error" className="text-xs text-red-500 font-medium">
-                      {errors.name}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2 relative">
-                  <label
-                    htmlFor="contact-email"
-                    className={`text-xs font-bold font-mono uppercase tracking-wider transition-colors duration-300 ${
-                      focusedField === 'email' ? 'text-primary' : 'text-muted-foreground'
-                    }`}
-                  >
-                    Email
-                  </label>
-                  <input
-                    id="contact-email"
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('email')}
-                    onBlur={() => setFocusedField(null)}
-                    aria-invalid={Boolean(errors.email)}
-                    aria-describedby={errors.email ? 'contact-email-error' : undefined}
-                    className={`w-full px-4 py-3 bg-background border rounded-lg outline-none transition-all duration-300 font-sans ${
-                      focusedField === 'email'
-                        ? 'border-primary ring-2 ring-primary/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]'
-                        : errors.email
-                          ? 'border-red-500'
-                          : 'border-border'
-                    }`}
-                    placeholder="john@example.com"
-                  />
-                  {errors.email && (
-                    <p id="contact-email-error" className="text-xs text-red-500 font-medium">
-                      {errors.email}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-2 relative">
-                <label
-                  htmlFor="contact-message"
-                  className={`text-xs font-bold font-mono uppercase tracking-wider transition-colors duration-300 ${
-                    focusedField === 'message' ? 'text-primary' : 'text-muted-foreground'
-                  }`}
-                >
-                  Message
-                </label>
-                <textarea
-                  id="contact-message"
-                  ref={messageRef}
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  onFocus={() => setFocusedField('message')}
-                  onBlur={() => setFocusedField(null)}
-                  rows={6}
-                  aria-invalid={Boolean(errors.message)}
-                  aria-describedby={errors.message ? 'contact-message-error' : undefined}
-                  data-testid="contact-message"
-                  className={`w-full px-4 py-3 bg-background border rounded-lg outline-none transition-all duration-300 resize-none font-sans ${
-                    focusedField === 'message'
-                      ? 'border-primary ring-2 ring-primary/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]'
-                      : errors.message
-                        ? 'border-red-500'
-                        : 'border-border'
-                  }`}
-                  placeholder="Tell me about your project..."
-                />
-                {errors.message && (
-                  <p id="contact-message-error" className="text-xs text-red-500 font-medium">
-                    {errors.message}
-                  </p>
-                )}
-              </div>
-
-              <motion.button
-                ref={buttonRef}
-                type="submit"
-                data-testid="contact-submit"
-                className="relative w-full py-3.5 sm:py-4 bg-foreground text-background font-bold rounded-lg overflow-hidden flex items-center justify-center gap-2 uppercase tracking-wide text-sm transition-colors min-h-[44px]"
-                whileHover={{ scale: 1.01, boxShadow: '0 10px 30px rgba(0,0,0,0.15)' }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-              >
-                {isSubmitting ? (
-                  <div className="loading-spinner" />
-                ) : (
-                  <>
-                    Send Message <Send className="w-4 h-4 ml-1" />
-                  </>
-                )}
-              </motion.button>
-            </form>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 w-full max-w-4xl text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
-            {contactDetails.map((detail, index) => (
-              <motion.div
-                key={detail.title}
-                className="flex flex-col items-center gap-3 group"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-              >
-                <div className="p-3 rounded-full bg-secondary text-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  <detail.icon className="w-5 h-5 sm:w-6 sm:h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold font-mono text-xs sm:text-sm uppercase tracking-wider mb-1">
-                    {detail.title}
-                  </h3>
-                  {detail.href ? (
-                    <a
-                      href={detail.href}
-                      className="text-muted-foreground hover:text-primary transition-colors font-medium text-xs sm:text-sm break-all"
-                    >
-                      {detail.content}
+          <ul className="mt-3 mb-0 p-0 list-none border-t border-line">
+            {details.map((d) => {
+              const body = (
+                <>
+                  <span className="icon-tile">
+                    <Icon name={d.icon} />
+                  </span>
+                  <span className="flex flex-col min-w-0 leading-[1.4]">
+                    <span className="eyebrow">{d.label}</span>
+                    <span className="text-[15px] font-semibold [overflow-wrap:anywhere]">{d.value}</span>
+                  </span>
+                </>
+              );
+              return (
+                <li key={d.label} className="border-b border-line">
+                  {d.href ? (
+                    <a href={d.href} className="flex items-center gap-4 py-[18px]">
+                      {body}
                     </a>
                   ) : (
-                    <p className="text-muted-foreground font-medium text-xs sm:text-sm">
-                      {detail.content}
-                    </p>
+                    <div className="flex items-center gap-4 py-[18px]">{body}</div>
                   )}
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+                </li>
+              );
+            })}
+          </ul>
         </div>
+
+        <form
+          aria-label="Contact form"
+          onSubmit={handleSubmit}
+          noValidate
+          className="flex-[999_1_520px] min-w-0 m-0 p-[clamp(24px,3vw,40px)] border border-line-2 rounded-[20px] bg-bg shadow-[0_40px_80px_-50px_var(--shadow)] flex flex-col gap-5"
+        >
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-5">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="contact-name" className="text-[14px] font-semibold">
+                Name
+              </label>
+              <input
+                id="contact-name"
+                name="name"
+                type="text"
+                placeholder="John Doe"
+                autoComplete="name"
+                value={formData.name}
+                onChange={handleChange}
+                aria-invalid={Boolean(errors.name)}
+                aria-describedby={errors.name ? 'contact-name-error' : undefined}
+                className={`${FIELD} ${fieldBorder('name')} min-h-[48px] px-3.5`}
+              />
+              {errors.name && (
+                <p id="contact-name-error" className="m-0 text-[13px] text-danger">
+                  {errors.name}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="contact-email" className="text-[14px] font-semibold">
+                Email
+              </label>
+              <input
+                id="contact-email"
+                name="email"
+                type="email"
+                placeholder="john@example.com"
+                autoComplete="email"
+                value={formData.email}
+                onChange={handleChange}
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={errors.email ? 'contact-email-error' : undefined}
+                className={`${FIELD} ${fieldBorder('email')} min-h-[48px] px-3.5`}
+              />
+              {errors.email && (
+                <p id="contact-email-error" className="m-0 text-[13px] text-danger">
+                  {errors.email}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="contact-message" className="text-[14px] font-semibold">
+              Message
+            </label>
+            <textarea
+              id="contact-message"
+              ref={messageRef}
+              name="message"
+              rows={6}
+              placeholder="Tell me about your project, timeline and budget…"
+              value={formData.message}
+              onChange={handleChange}
+              aria-invalid={Boolean(errors.message)}
+              aria-describedby={errors.message ? 'contact-message-error' : undefined}
+              data-testid="contact-message"
+              className={`${FIELD} ${fieldBorder('message')} px-3.5 py-3 resize-y`}
+            />
+            {errors.message && (
+              <p id="contact-message-error" className="m-0 text-[13px] text-danger">
+                {errors.message}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <span className="text-[13px] text-muted">Opens WhatsApp with your message ready to send.</span>
+            <button type="submit" data-testid="contact-submit" className="btn-solid border-0 cursor-pointer hover:opacity-80">
+              Send message
+              <Icon name="send" size={16} strokeWidth={2} />
+            </button>
+          </div>
+        </form>
       </div>
     </section>
   );

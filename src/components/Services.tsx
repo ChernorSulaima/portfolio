@@ -1,106 +1,62 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Section } from './ui/Section';
-import { Card } from './ui/Card';
+import Kicker from './ui/Kicker';
+import Icon from './ui/Icon';
 import { services } from '../data/personalData';
-import { Code2, Layout, Zap, ArrowRight, Film, Workflow } from 'lucide-react';
 
-const iconMap: { [key: string]: React.FC<{ className?: string }> } = {
-  Code2,
-  Layout,
-  Zap,
-  Film,
-  Workflow,
-};
+const Services: React.FC = () => (
+  <section id="services" className="border-t border-line">
+    <div className="pf-container section-pad flex flex-col gap-12">
+      <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-5">
+        <div className="flex flex-col gap-[18px] max-w-[620px]">
+          <Kicker>Services</Kicker>
+          <h2 className="h2-section">How I can help</h2>
+          <p className="m-0 text-[17px] text-muted">
+            From the first line of code to the launch video — one partner for the whole build.
+          </p>
+        </div>
+        <a href="#pricing" className="link-accent">
+          Estimate your project
+          <Icon name="arrow-right" size={16} strokeWidth={2} />
+        </a>
+      </div>
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95, filter: 'blur(4px)' },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    filter: 'blur(0px)',
-    transition: {
-      delay: i * 0.1,
-      duration: 0.6,
-      type: 'spring',
-      stiffness: 100,
-      damping: 15,
-    },
-  }),
-};
-
-const Services: React.FC = () => {
-  return (
-    <Section id="services" className="bg-background py-16 sm:py-20 md:py-32 border-t border-border">
-      <div className="container px-4 mx-auto max-w-6xl">
-        <motion.div
-          className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-16 gap-4 sm:gap-6"
-          initial={{ opacity: 0, y: 30, filter: 'blur(4px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.7 }}
-        >
-          <div>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground mb-4 font-heading">
-              SERVICES
-            </h2>
-            <p className="text-muted-foreground text-base sm:text-lg max-w-xl font-sans leading-relaxed">
-              Engineering solutions that drive business growth.
-            </p>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,320px),1fr))] gap-px bg-line border border-line rounded-[20px] overflow-hidden">
+        {services.map((service) => (
+          <div key={service.title} className="p-8 bg-bg flex flex-col gap-3.5">
+            <span className="icon-tile">
+              <Icon name={service.icon} size={20} />
+            </span>
+            <h3 className="mt-2 mb-0 font-heading font-semibold text-[21px] tracking-[-0.01em]">{service.title}</h3>
+            <p className="m-0 text-[15px] text-muted">{service.description}</p>
+            <ul className="mt-1.5 mb-0 pt-4 border-t border-line list-none pl-0 flex flex-col gap-2 font-mono text-[12px] font-medium">
+              {service.items.map((item) => (
+                <li key={item} className="flex items-center gap-2.5">
+                  <span className="w-[5px] h-[5px] rounded-full bg-accent" />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
-          <a href="#contact" className="group inline-flex items-center text-sm font-bold font-mono text-foreground hover:text-primary transition-colors uppercase tracking-wider">
-            Start a Project <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        ))}
+
+        <div className="p-8 bg-surface flex flex-col gap-3.5">
+          <span className="grid place-items-center w-11 h-11 rounded-xl bg-accent text-white">
+            <Icon name="calculator" size={20} />
+          </span>
+          <h3 className="mt-2 mb-0 font-heading font-semibold text-[21px] tracking-[-0.01em]">
+            Not sure where to start?
+          </h3>
+          <p className="m-0 text-[15px] text-muted">
+            Use the pricing calculator to get a provisional starting price before we talk.
+          </p>
+          <a href="#pricing" className="btn-solid mt-auto self-start !min-h-[44px] !px-[18px] !text-[14px] !gap-2">
+            Open calculator
+            <Icon name="arrow-right" size={16} strokeWidth={2} />
           </a>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {services.map((service, index) => {
-            const Icon = iconMap[service.icon] || Code2;
-            return (
-              <motion.div
-                key={index}
-                variants={cardVariants}
-                custom={index}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: '-60px' }}
-                whileHover={{ y: -6, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
-              >
-                <Card
-                  className="p-5 sm:p-6 md:p-8 h-full border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group"
-                  variant="default"
-                >
-                  <div className="flex flex-col h-full">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-secondary text-foreground flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-                      <Icon className="w-5 h-5 sm:w-6 sm:h-6 group-hover-spin" />
-                    </div>
-
-                    <h3 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4 font-heading tracking-tight">
-                      {service.title}
-                    </h3>
-
-                    <p className="text-muted-foreground leading-relaxed mb-6 sm:mb-8 flex-grow font-sans text-sm sm:text-base">
-                      {service.description}
-                    </p>
-
-                    <ul className="space-y-3 sm:space-y-4 border-t border-border pt-4 sm:pt-6">
-                      {service.items.map((item, i) => (
-                        <li key={i} className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-bold text-foreground/80 font-mono">
-                          <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </Card>
-              </motion.div>
-            );
-          })}
         </div>
       </div>
-    </Section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default Services;
