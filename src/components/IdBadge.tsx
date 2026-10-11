@@ -76,6 +76,9 @@ const IdBadge: React.FC<IdBadgeProps> = ({ compact = false, className = '' }) =>
       const hr = section.getBoundingClientRect();
       const besideText = window.innerWidth >= 1024 && sr.top - hr.top < 240;
       const prevScale = b.s;
+      const prevAx = b.ax;
+      const prevAy = b.ay;
+      const prevL = b.L;
 
       if (besideText) {
         b.s = SCALE_BESIDE_TEXT;
@@ -87,6 +90,18 @@ const IdBadge: React.FC<IdBadgeProps> = ({ compact = false, className = '' }) =>
         b.L = 64;
       }
       b.ax = stage.clientWidth / 2;
+
+      // Carry the card along when its anchor moves (resize, fonts loading). Moving the current and
+      // previous positions together keeps its velocity, so the jump isn't read as a throw.
+      const shiftX = b.ax - prevAx;
+      const shiftY = b.ay - prevAy + (b.L - prevL);
+      b.px += shiftX;
+      b.ox += shiftX;
+      b.tx += shiftX;
+      b.py += shiftY;
+      b.oy += shiftY;
+      b.ty += shiftY;
+
       hook.style.display = besideText ? 'none' : 'block';
       stage.style.height = `${Math.ceil(b.ay + b.L + card.offsetHeight * b.s + HINT_SPACE)}px`;
 

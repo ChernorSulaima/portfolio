@@ -2,13 +2,18 @@ import React from 'react';
 import Kicker from './ui/Kicker';
 import Icon from './ui/Icon';
 import Link from './ui/Link';
+import Reveal from './ui/Reveal';
 import ProjectVisual from './ProjectVisual';
 import { projects } from '../data/personalData';
+import { PHONE_QUERY, useMediaQuery } from '../hooks/useMediaQuery';
 
-const Projects: React.FC = () => (
+const Projects: React.FC = () => {
+  const isPhone = useMediaQuery(PHONE_QUERY);
+
+  return (
   <section id="projects" className="border-t border-line">
     <div className="pf-container section-pad">
-      <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-5 mb-6">
+      <Reveal className="flex flex-wrap items-end justify-between gap-x-12 gap-y-5 mb-6">
         <div className="flex flex-col gap-[18px] max-w-[620px]">
           <Kicker>Portfolio</Kicker>
           <h2 className="h2-section">Selected works</h2>
@@ -19,24 +24,27 @@ const Projects: React.FC = () => (
         <span className="font-mono text-[12px] font-bold tracking-[0.08em] uppercase text-muted">
           04 featured · 07+ under NDA
         </span>
-      </div>
+      </Reveal>
 
       {projects.map((project, i) => (
         <article
           key={project.number}
-          className={`flex flex-wrap items-center gap-x-16 gap-y-10 py-14 border-t border-line ${
+          className={`flex flex-wrap items-center gap-x-16 gap-y-8 sm:gap-y-10 py-10 sm:py-14 border-t border-line ${
             i % 2 === 1 ? 'flex-row-reverse' : ''
           }`}
         >
-          <ProjectVisual project={project} className="flex-[999_1_560px] min-w-0" />
+          {/* Screenshots slide in from the outside edge: left for even rows, right for odd. */}
+          <Reveal from={i % 2 === 1 ? 'right' : 'left'} className="flex-[999_1_560px] min-w-0">
+            <ProjectVisual project={project} compact={isPhone} />
+          </Reveal>
 
-          <div className="flex-[1_1_360px] flex flex-col gap-[18px]">
-            <div className="flex items-center gap-3 font-mono text-[12px] font-bold tracking-[0.14em] uppercase">
+          <Reveal delay={120} className="flex-[1_1_360px] flex flex-col gap-[18px]">
+            <div className="flex items-center gap-3 font-mono text-[11px] sm:text-[12px] font-bold tracking-[0.14em] uppercase">
               <span className="text-accent-text">{project.number}</span>
               <span className="w-6 h-px bg-line-2" />
               <span className="text-muted">{project.category}</span>
             </div>
-            <h3 className="m-0 font-heading font-semibold text-[36px] leading-[1.1] tracking-[-0.025em]">
+            <h3 className="m-0 font-heading font-semibold text-[28px] sm:text-[36px] leading-[1.1] tracking-[-0.025em]">
               {project.title}
             </h3>
             <p className="m-0 text-[16px] text-muted">{project.description}</p>
@@ -75,11 +83,11 @@ const Projects: React.FC = () => (
                 </a>
               )}
             </div>
-          </div>
+          </Reveal>
         </article>
       ))}
 
-      <div className="flex flex-wrap items-center gap-x-7 gap-y-5 px-8 py-7 border border-line rounded-2xl bg-surface">
+      <Reveal className="flex flex-wrap items-center gap-x-7 gap-y-5 px-6 py-6 sm:px-8 sm:py-7 border border-line rounded-2xl bg-surface">
         <span className="icon-tile !w-12 !h-12">
           <Icon name="lock" size={20} />
         </span>
@@ -95,9 +103,10 @@ const Projects: React.FC = () => (
         >
           Ask about them
         </a>
-      </div>
+      </Reveal>
     </div>
   </section>
-);
+  );
+};
 
 export default Projects;

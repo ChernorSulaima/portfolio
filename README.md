@@ -6,8 +6,8 @@ A responsive personal portfolio built with React, TypeScript, Vite and Tailwind 
 
 ## Features
 
-- Home page: hero with a draggable ID badge on a lanyard, client strip, scroll-driven experience timeline, selected works, about and skills, services, testimonials, pricing calculator and contact
-- A shorter phone version of the home page (below 640px) with a full-screen menu
+- Home page: hero with a draggable ID badge on a lanyard, client strip, scroll-driven experience timeline (each role opens as the timeline reaches it), selected works, about and skills, services, testimonials, GitHub activity heatmap, pricing calculator and contact
+- The same page on phones, with a full-screen menu and a phone layout for the hero; sections and cards slide in as you scroll
 - Case-study pages for each project at `/work/<slug>`, with client-side routing
 - Dark theme by default, with a light theme saved in `localStorage`
 - Pricing calculator with a WhatsApp quote handoff, and a contact form that opens a prefilled WhatsApp chat
@@ -45,7 +45,7 @@ npm run dev
 |------|-------|
 | Experience, projects, clients, skills, services, testimonials, socials, contact details | `src/data/personalData.ts` |
 | Case-study pages | `src/pages/case-studies/` (routes in `src/App.tsx`) |
-| Phone home page | `src/components/mobile/MobileHome.tsx` |
+| GitHub heatmap and repositories | `public/github-data.json` |
 | Pricing options, add-ons, timelines, currency, disclaimer | `src/data/pricingData.ts` |
 | WhatsApp phone number | `WHATSAPP_PHONE` in `src/data/pricingData.ts` |
 | Colours (light and dark) | CSS variables at the top of `src/index.css` |
@@ -59,6 +59,12 @@ Amounts in `pricingData.ts` are **provisional placeholders**. Review and adjust 
 ### Case-study placeholders
 
 The Gloze Skincare and Nakam Gaming case studies show `[X]` placeholders in their **Outcome** stats. Replace them with real numbers in `src/pages/case-studies/`.
+
+### Refreshing GitHub data
+
+1. Query the GitHub GraphQL API for your contribution calendar and repositories (same shape as the existing JSON).
+2. Replace `public/github-data.json`.
+3. Rebuild / redeploy. The section shows the date range the snapshot covers; if the file is missing or invalid it shows a link to the GitHub profile instead.
 
 ## Contact flow
 

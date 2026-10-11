@@ -9,28 +9,60 @@ test.describe('Portfolio smoke suite', () => {
       await expect(page.locator(`nav[aria-label="Primary"] a[href="#${id}"]`)).toBeVisible();
     }
 
-    for (const id of ['experience', 'projects', 'services', 'pricing']) {
+    for (const id of ['experience', 'projects', 'services', 'github', 'pricing']) {
       await expect(page.locator(`footer a[href="#${id}"]`)).toBeVisible();
     }
   });
 
-  test('phone layout uses the menu and the shorter page', async ({ page }) => {
+  test('phone layout has the menu and every section', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');
     await page.getByTestId('mobile-menu-toggle').click();
     const menu = page.locator('nav[aria-label="Primary"]');
-    await expect(menu.locator('a[href="#projects"]')).toBeVisible();
-    await expect(menu.locator('a[href="#contact"]')).toBeVisible();
+    for (const id of ['projects', 'experience', 'about', 'pricing', 'contact']) {
+      await expect(menu.locator(`a[href="#${id}"]`)).toBeVisible();
+    }
 
     await menu.locator('a[href="#projects"]').click();
     await expect(menu).toBeHidden();
 
-    // The phone page shows two projects until "View all projects" is tapped.
-    await expect(page.locator('#projects article')).toHaveCount(2);
-    await page.getByRole('button', { name: 'View all projects' }).click();
+    // Nothing is hidden behind "view all" buttons on phones.
     await expect(page.locator('#projects article')).toHaveCount(4);
+    await expect(page.locator('#experience [data-xp-item]')).toHaveCount(6);
+    await expect(page.getByRole('button', { name: /view all|key achievements/i })).toHaveCount(0);
 
-    await expect(page.locator('#pricing')).toHaveCount(0);
+    for (const id of ['about', 'services', 'testimonials', 'github', 'pricing', 'contact']) {
+      await expect(page.locator(`#${id}`)).toHaveCount(1);
+    }
+    await expect(page.locator('#contact form')).toHaveCount(1);
+  });
+
+  test('experience roles open as the timeline reaches them', async ({ page }) => {
+    await page.goto('/');
+    const roles = page.locator('#experience [data-xp-item] .collapsible');
+    await expect(roles.last()).not.toHaveClass(/is-open/);
+
+    // Bring the last role to the middle of the screen; repeat in case fonts or images shift the layout.
+    await expect
+      .poll(async () => {
+        await page.evaluate(() => {
+          document.documentElement.style.scrollBehavior = 'auto';
+          const items = document.querySelectorAll('#experience [data-xp-item]');
+          const last = items[items.length - 1].getBoundingClientRect();
+          window.scrollTo(0, window.scrollY + last.top - window.innerHeight * 0.5 + 40);
+        });
+        return roles.last().getAttribute('class');
+      })
+      .toMatch(/is-open/);
+    // Only the role the timeline is on stays open.
+    await expect(roles.first()).not.toHaveClass(/is-open/);
+  });
+
+  test('GitHub heatmap renders the snapshot', async ({ page }) => {
+    await page.goto('/#github');
+    const heatmap = page.locator('#github [role="img"]');
+    await expect(heatmap).toHaveAttribute('aria-label', /304 GitHub contributions/);
+    await expect(heatmap.locator('span.aspect-square')).toHaveCount(368);
   });
 
   test('pricing calculator updates the total', async ({ page }) => {

@@ -50,11 +50,9 @@ export interface Project {
   title: string;
   category: string;
   description: string;
-  mobileDescription: string;
   challenge: string;
   solution: string;
   stack: string;
-  mobileStack: string;
   caseStudyPath: string;
   liveUrl?: string;
   githubUrl?: string;

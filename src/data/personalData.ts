@@ -161,14 +161,11 @@ export const projects: Project[] = [
     category: 'E-Commerce / Beauty',
     description:
       'An e-commerce platform for Gloze — a Korean skincare brand formulated specifically for melanin-rich skin tones.',
-    mobileDescription:
-      'A premium storefront with skin quiz, product catalog and rewards for a brand made for melanin-rich skin.',
     challenge:
       'The brand needed a premium shopping experience that communicated trust and ingredient transparency.',
     solution:
       'A polished storefront with skin quiz, product catalog, rewards program and a luxury brand feel.',
     stack: 'React / TypeScript / Tailwind / E-Commerce',
-    mobileStack: 'React / TypeScript / Tailwind',
     caseStudyPath: '/work/gloze-skincare',
     liveUrl: 'https://shopgloze.vercel.app',
     visual: {
@@ -184,14 +181,11 @@ export const projects: Project[] = [
     category: 'Fintech / Mobile App',
     description:
       'A savings and money-management app for Sierra Leone, built for salaried workers whose money is split across mobile money, a bank account and cash.',
-    mobileDescription:
-      'A savings and money-management app for Sierra Leone: a daily safe-to-spend amount, savings goals and a debt book.',
     challenge:
       'People want to know one thing each day: how much can I safely spend today, and am I still on track to save?',
     solution:
       'A daily safe-to-spend amount, savings goals with a pace line, Insights, shared family goals and a debt book both sides confirm.',
     stack: 'Expo / React Native / NestJS / PostgreSQL / TypeScript',
-    mobileStack: 'Expo / React Native / NestJS / PostgreSQL',
     caseStudyPath: '/work/airpay',
     githubUrl: 'https://github.com/ChernorSulaima/AirPay',
     status: 'In development · v0',
@@ -210,14 +204,11 @@ export const projects: Project[] = [
     category: 'Gaming / Fintech',
     description:
       'A real-time gaming platform for dice duels, coin flips and tournaments — with wallet integration and live game lobbies.',
-    mobileDescription:
-      'A real-time gaming platform for dice duels, coin flips and tournaments — with wallet integration and live game lobbies.',
     challenge:
       'Players wanted a fair, transparent experience with real-time multiplayer and secure transactions.',
     solution:
       'Live lobbies, multiple game modes, leaderboards, a wallet system and tournament management.',
     stack: 'React / TypeScript / Tailwind / WebSockets',
-    mobileStack: 'React / TypeScript / Tailwind',
     caseStudyPath: '/work/nakam-gaming',
     liveUrl: 'https://rollbet-arena.vercel.app',
     visual: {
@@ -233,14 +224,11 @@ export const projects: Project[] = [
     category: 'EdTech / Mobile App',
     description:
       'Memorise with your Sheikh — a Qur’an memorisation and classroom app that connects students, teachers, teaching assistants and parents.',
-    mobileDescription:
-      'Memorise with your Sheikh — a Qur’an memorisation and classroom app that connects students, teachers, teaching assistants and parents.',
     challenge:
       'Hifz classes need one place where the teacher assigns and reviews lessons, students practise, and parents follow progress.',
     solution:
       'Today’s focus set by the Sheikh, an AI review queue for recitations, Review & Test, progress points and streaks, and a Mushaf that remembers where you stopped.',
     stack: 'Expo / React Native / Supabase / TypeScript',
-    mobileStack: 'Expo / React Native / Supabase',
     caseStudyPath: '/work/sahid',
     status: 'In development',
     visual: {

@@ -5,6 +5,7 @@ const FOOTER_NAV = [
   { label: 'Experience', href: '#experience' },
   { label: 'Projects', href: '#projects' },
   { label: 'Services', href: '#services' },
+  { label: 'GitHub', href: '#github' },
   { label: 'Pricing', href: '#pricing' },
 ];
 
