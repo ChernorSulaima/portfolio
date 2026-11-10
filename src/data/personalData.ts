@@ -41,7 +41,7 @@ export const socialLinks: SocialLink[] = [
 
 export const heroFacts: Fact[] = [
   { label: 'Based in', value: 'Freetown, Sierra Leone' },
-  { label: 'Education', value: 'Limkokwing University Sierra Leone' },
+  { label: 'Education', value: 'Software Engineering in Multimedia, Limkokwing University' },
   { label: 'Focus', value: 'TypeScript, React, React Native' },
   { label: 'Availability', value: 'Remote and contract roles' },
 ];
@@ -56,7 +56,7 @@ export const mobileHeroFacts: Fact[] = [
   { label: 'Based in', value: 'Freetown, SL' },
   { label: 'Time zone', value: 'GMT' },
   { label: 'Focus', value: 'TypeScript, React' },
-  { label: 'Education', value: 'Limkokwing University' },
+  { label: 'Education', value: 'Software Engineering, Limkokwing' },
 ];
 
 export const clients: Client[] = [
@@ -199,8 +199,8 @@ export const projects: Project[] = [
     visual: {
       kind: 'browser',
       url: 'rollbet-arena.vercel.app',
-      image: '/images/rollbet.png',
-      alt: 'Nakam gaming platform lobby',
+      image: 'nakam-lobby',
+      alt: 'Nakam game lobby: 8 open games, the total pot, 37 players online and the game modes',
     },
   },
   {

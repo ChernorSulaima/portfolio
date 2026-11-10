@@ -14,6 +14,7 @@ import Kicker from '../../components/ui/Kicker';
 import Icon from '../../components/ui/Icon';
 import IPhone from '../../components/ui/IPhone';
 import { AIRPAY_BACKGROUND, NAKAM_BACKGROUND } from '../../data/personalData';
+import { browserShot } from '../../lib/shots';
 
 // Five screens fanned out from the centre: History, Rent goal, Home, Insights, Goals.
 const HERO_PHONES = [
@@ -233,7 +234,7 @@ const AirpayCaseStudy: React.FC = () => (
       title="Nakam Gaming"
       cta="Read case study"
       thumbBackground={NAKAM_BACKGROUND}
-      thumb={<OffsetShot src="/images/rollbet.png" />}
+      thumb={<OffsetShot src={browserShot('nakam-lobby').src} />}
     />
   </CaseStudyLayout>
 );

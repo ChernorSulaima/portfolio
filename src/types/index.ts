@@ -31,7 +31,7 @@ export type ProjectVisual =
   | {
       kind: 'browser';
       url: string;
-      /** Screenshot name under /images/apps (see lib/shots.ts), or a full image path. */
+      /** Screenshot name under /images/apps (see lib/shots.ts). */
       image: string;
       alt: string;
     }

@@ -78,7 +78,7 @@ const ProjectVisual: React.FC<ProjectVisualProps> = ({ project, compact = false,
       >
         <BrowserBar url={visual.url} size={compact ? 'sm' : 'md'} />
         <img
-          {...(visual.image.startsWith('/') ? { src: visual.image } : browserShot(visual.image))}
+          {...browserShot(visual.image)}
           sizes="(min-width: 1100px) 760px, 92vw"
           alt={visual.alt}
           loading="lazy"
