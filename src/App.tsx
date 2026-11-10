@@ -3,7 +3,7 @@ import Home from './pages/Home';
 import { scrollToHash, usePathname } from './lib/router';
 
 const CASE_STUDIES: Record<string, React.LazyExoticComponent<React.FC>> = {
-  '/work/gloze-skincare': lazy(() => import('./pages/case-studies/GlozeCaseStudy')),
+  '/work/learnme': lazy(() => import('./pages/case-studies/LearnMeCaseStudy')),
   '/work/airpay': lazy(() => import('./pages/case-studies/AirpayCaseStudy')),
   '/work/nakam-gaming': lazy(() => import('./pages/case-studies/NakamCaseStudy')),
   '/work/sahid': lazy(() => import('./pages/case-studies/SahidCaseStudy')),

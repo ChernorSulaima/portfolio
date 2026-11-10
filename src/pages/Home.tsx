@@ -8,27 +8,26 @@ import About from '../components/About';
 import Services from '../components/Services';
 import Testimonials from '../components/Testimonials';
 import GitHubOverview from '../components/GitHubOverview';
-import PricingCalculator from '../components/PricingCalculator';
+import BriefBuilder from '../components/BriefBuilder';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 import { PHONE_QUERY, useMediaQuery } from '../hooks/useMediaQuery';
-import type { QuoteSummary } from '../types';
 
-const HOME_TITLE = 'Chernor Sulaiman Jalloh | Software Engineer';
+const HOME_TITLE = 'Chernor Sulaiman Jalloh | Full-Stack Software Engineer';
 
 /** One page for every screen size; phones get their own header, hero and client strip. */
 const Home: React.FC = () => {
   const isPhone = useMediaQuery(PHONE_QUERY);
-  const [quoteMessage, setQuoteMessage] = useState('');
-  const [quoteKey, setQuoteKey] = useState(0);
+  const [briefMessage, setBriefMessage] = useState('');
+  const [briefKey, setBriefKey] = useState(0);
 
   useEffect(() => {
     document.title = HOME_TITLE;
   }, []);
 
-  const handleRequestQuote = useCallback((_summary: QuoteSummary, message: string) => {
-    setQuoteMessage(message);
-    setQuoteKey((key) => key + 1);
+  const handleUseBrief = useCallback((message: string) => {
+    setBriefMessage(message);
+    setBriefKey((key) => key + 1);
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
@@ -38,14 +37,14 @@ const Home: React.FC = () => {
       <main>
         <Hero />
         <Clients compact={isPhone} />
-        <Experience />
         <Projects />
+        <Experience />
         <About />
-        <Services />
-        <Testimonials />
         <GitHubOverview />
-        <PricingCalculator onRequestQuote={handleRequestQuote} />
-        <Contact initialMessage={quoteMessage} quoteKey={quoteKey} />
+        <Testimonials />
+        <Services />
+        <BriefBuilder onUseBrief={handleUseBrief} />
+        <Contact initialMessage={briefMessage} briefKey={briefKey} />
       </main>
       <Footer />
     </>

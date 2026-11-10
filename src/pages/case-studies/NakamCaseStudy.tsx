@@ -9,12 +9,8 @@ import {
   Outcome,
 } from '../../components/case-study/CaseStudyParts';
 import PhoneFan from '../../components/ui/PhoneFan';
-import {
-  NAKAM_BACKGROUND,
-  SAHID_BACKGROUND,
-  SAHID_PHONE_RADIUS,
-  SAHID_SCREENS,
-} from '../../data/personalData';
+import { NAKAM_BACKGROUND, SAHID_BACKGROUND, SAHID_SCREENS } from '../../data/personalData';
+import { browserShot } from '../../lib/shots';
 
 const NakamCaseStudy: React.FC = () => (
   <CaseStudyLayout title="Nakam Gaming">
@@ -55,7 +51,8 @@ const NakamCaseStudy: React.FC = () => (
             <span className="w-[46px]" />
           </span>
           <img
-            src="/images/rollbet.png"
+            {...browserShot('nakam-lobby')}
+            sizes="(min-width: 1360px) 1080px, 84vw"
             alt="Nakam game lobby with open games, total pot value, players online and game modes"
             className="block w-full h-auto"
           />
@@ -102,14 +99,9 @@ const NakamCaseStudy: React.FC = () => (
     />
 
     <Outcome
-      stats={[
-        { value: '[X]', label: 'Games played' },
-        { value: '[X]', label: 'Registered players' },
-        { value: '[X]', label: 'Tournaments hosted' },
-      ]}
       quote="The gaming platform he built handles real-time multiplayer, wallet systems and tournament brackets — all working smoothly. Before, we were duct-taping things together. Massive upgrade for us."
-      initials="ST"
-      name="Samuel T."
+      initials="SC"
+      name="Samuel T. Conteh"
       role="Project Coordinator, Nakam Gaming"
     />
 
@@ -119,7 +111,7 @@ const NakamCaseStudy: React.FC = () => (
       title="Sahid"
       cta="Read case study"
       thumbBackground={SAHID_BACKGROUND}
-      thumb={<PhoneFan screens={SAHID_SCREENS} radius={SAHID_PHONE_RADIUS} preset="card" />}
+      thumb={<PhoneFan screens={SAHID_SCREENS} preset="card" />}
     />
   </CaseStudyLayout>
 );

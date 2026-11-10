@@ -6,11 +6,13 @@ A responsive personal portfolio built with React, TypeScript, Vite and Tailwind 
 
 ## Features
 
-- Home page: hero with a draggable ID badge on a lanyard, client strip, scroll-driven experience timeline (each role opens as the timeline reaches it), selected works, about and skills, services, testimonials, GitHub activity heatmap, pricing calculator and contact
+- Home page: hero with a portrait card, client strip, selected work, scroll-driven experience timeline (each role opens as the timeline reaches it), about and skills, GitHub activity heatmap, testimonials, services, project brief builder and contact
 - The same page on phones, with a full-screen menu and a phone layout for the hero; sections and cards slide in as you scroll
 - Case-study pages for each project at `/work/<slug>`, with client-side routing
+- App screenshots captured from the running apps at iPhone resolution, shown in an iPhone 16 Pro frame drawn in CSS (`src/components/ui/IPhone.tsx`)
 - Dark theme by default, with a light theme saved in `localStorage`
-- Pricing calculator with a WhatsApp quote handoff, and a contact form that opens a prefilled WhatsApp chat
+- Project brief builder (no prices) that writes a ready-made message, and a contact form that opens it in a WhatsApp chat
+- A one-page CV built from `cv/cv.html`
 - Playwright smoke tests and GitHub Actions CI
 
 ## Tech stack
@@ -38,27 +40,35 @@ npm run dev
 | `npm run lint` | ESLint (zero warnings) |
 | `npm test` | Playwright tests |
 | `npm run check` | Lint + build + test |
+| `npm run cv` | Rebuild the CV PDF from `cv/cv.html` |
 
 ## Editing content
 
 | What | Where |
 |------|-------|
-| Experience, projects, clients, skills, services, testimonials, socials, contact details | `src/data/personalData.ts` |
+| Experience, projects, clients, skills, services, testimonials, socials, contact details, brief builder options | `src/data/personalData.ts` |
 | Case-study pages | `src/pages/case-studies/` (routes in `src/App.tsx`) |
 | GitHub heatmap and repositories | `public/github-data.json` |
-| Pricing options, add-ons, timelines, currency, disclaimer | `src/data/pricingData.ts` |
-| WhatsApp phone number | `WHATSAPP_PHONE` in `src/data/pricingData.ts` |
+| WhatsApp and phone number | `WHATSAPP_PHONE` in `src/data/personalData.ts` |
+| The brief message template | `src/lib/brief.ts` |
 | Colours (light and dark) | CSS variables at the top of `src/index.css` |
-| Resume download | `public/resume.pdf` |
-| Project / profile images | `public/images/` |
+| CV (the Resume button) | Edit `cv/cv.html`, then `npm run cv` writes `public/Chernor-Sulaiman-Jalloh-CV.pdf` |
+| Portrait and link-preview image | `public/images/portrait-*.webp`, `public/og.jpg` |
+| App screenshots | `public/images/apps/` (see below) |
 
-### Pricing notes
+### App screenshots
 
-Amounts in `pricingData.ts` are **provisional placeholders**. Review and adjust before treating calculator output as official rates. Estimates are labeled non-binding in the UI and in generated quote messages.
+Each screenshot in `public/images/apps/` is saved at two widths so the browser can pick the sharpest one:
+`<name>-603.webp` and `<name>-1206.webp` for phone screens, `<name>-1200.webp` and `<name>-1920.webp` for
+browser screens. Components refer to them by name (`airpay-home`, `learnme-courses`) through `src/lib/shots.ts`.
 
-### Case-study placeholders
+A phone screen must be a full iPhone 16 Pro screenshot, 1206 x 2622 pixels (402 x 874 points at 3x), status bar
+included. The frame adds the bezel, Dynamic Island and buttons.
 
-The Gloze Skincare and Nakam Gaming case studies show `[X]` placeholders in their **Outcome** stats. Replace them with real numbers in `src/pages/case-studies/`.
+### Case-study numbers
+
+Case studies only show numbers that are real. `Outcome` takes an optional `stats` list: add it to a case study
+once there are figures to report.
 
 ### Refreshing GitHub data
 
@@ -68,8 +78,8 @@ The Gloze Skincare and Nakam Gaming case studies show `[X]` placeholders in thei
 
 ## Contact flow
 
-1. Optionally configure an estimate in **Pricing** and click **Request this quote**.
-2. The Contact message field is prefilled (editable).
+1. Optionally pick a project type, features, timeline and stage in **Start a project** and click **Continue with this brief**.
+2. The Contact message field is filled with the brief (editable).
 3. Submit opens `https://wa.me/<WHATSAPP_PHONE>?text=...` with name, email, and message encoded.
 
 EmailJS is intentionally not used.

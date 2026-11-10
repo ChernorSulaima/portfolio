@@ -31,16 +31,15 @@ export type ProjectVisual =
   | {
       kind: 'browser';
       url: string;
+      /** Screenshot name under /images/apps (see lib/shots.ts). */
       image: string;
       alt: string;
     }
   | {
       kind: 'phones';
       brand: 'airpay' | 'sahid';
-      /** Left, centre and right screens. */
+      /** Left, centre and right screens, as screenshot names under /images/apps. */
       screens: [string, string, string];
-      /** Phone corner radius (horizontal / vertical) for the screenshot's aspect ratio. */
-      radius: string;
       background: string;
       label: string;
     };
@@ -68,9 +67,7 @@ export interface Service {
 }
 
 export interface SkillGroup {
-  level: string;
-  /** Filled bars out of 3. */
-  score: number;
+  area: string;
   items: string[];
 }
 
@@ -81,39 +78,16 @@ export interface Testimonial {
   quote: string;
 }
 
-export interface PricingOption {
+export interface BriefOption {
   id: string;
   label: string;
   description: string;
-  basePrice: number;
 }
 
-export interface PricingAddOn {
-  id: string;
-  label: string;
-  description: string;
-  /** List price; individual add-ons must be ≤ 150. Bundle uses discounted package price. */
-  price: number;
-  /** When true, selecting this replaces all other add-ons (everything package). */
-  isBundle?: boolean;
-}
-
-export interface TimelineOption {
-  id: string;
-  label: string;
-  description: string;
-  multiplier: number;
-}
-
-export interface QuoteSummary {
-  projectTypeId: string;
-  projectTypeLabel: string;
-  addOnIds: string[];
-  addOnLabels: string[];
-  timelineId: string;
-  timelineLabel: string;
-  subtotal: number;
-  total: number;
-  currency: string;
-  formattedTotal: string;
+/** What a visitor picked in the project brief builder. */
+export interface BriefSelection {
+  projectType: string;
+  features: string[];
+  timeline: string;
+  stage: string;
 }

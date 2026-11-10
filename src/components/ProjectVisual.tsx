@@ -3,6 +3,7 @@ import BrowserBar from './ui/BrowserBar';
 import PhoneFan from './ui/PhoneFan';
 import Icon from './ui/Icon';
 import Link from './ui/Link';
+import { browserShot } from '../lib/shots';
 import type { Project } from '../types';
 
 const CHIP =
@@ -61,7 +62,7 @@ interface ProjectVisualProps {
   className?: string;
 }
 
-/** The screenshot block for a project: a browser window for websites, a 3D phone stack for apps. */
+/** The screenshot block for a project: a browser window for websites, three iPhones for apps. */
 const ProjectVisual: React.FC<ProjectVisualProps> = ({ project, compact = false, className = '' }) => {
   const { visual } = project;
   const frame = compact
@@ -76,7 +77,13 @@ const ProjectVisual: React.FC<ProjectVisualProps> = ({ project, compact = false,
         className={`${frame} bg-surface ${className}`}
       >
         <BrowserBar url={visual.url} size={compact ? 'sm' : 'md'} />
-        <img src={visual.image} alt={visual.alt} className="block w-full aspect-[16/10] object-cover object-top" />
+        <img
+          {...browserShot(visual.image)}
+          sizes="(min-width: 1100px) 760px, 92vw"
+          alt={visual.alt}
+          loading="lazy"
+          className="block w-full aspect-[16/10] object-cover object-top"
+        />
       </Link>
     );
   }
@@ -97,7 +104,6 @@ const ProjectVisual: React.FC<ProjectVisualProps> = ({ project, compact = false,
       )}
       <PhoneFan
         screens={visual.screens}
-        radius={visual.radius}
         preset={compact ? 'mobile' : 'home'}
         className={compact ? 'pt-4' : ''}
       />

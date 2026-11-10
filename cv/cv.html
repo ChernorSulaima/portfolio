@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Chernor Sulaiman Jalloh — CV</title>
+    <meta name="author" content="Chernor Sulaiman Jalloh" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=block"
+    />
+    <style>
+      /* A4, one page. Edit the text below, then run `npm run cv` to rebuild the PDF. */
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      :root {
+        --ink: #0f172a;
+        --body: #334155;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --accent: #1d4ed8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        width: 210mm;
+        min-height: 297mm;
+        padding: 11mm 14mm 8mm;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        font-size: 8.6pt;
+        line-height: 1.45;
+        color: var(--body);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 4mm;
+        padding-bottom: 4mm;
+        border-bottom: 1.5pt solid var(--ink);
+      }
+
+      h1 {
+        margin: 0;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 22pt;
+        line-height: 1;
+        white-space: nowrap;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+
+      .role {
+        margin: 2.4mm 0 0;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 500;
+        font-size: 11.5pt;
+        color: var(--accent);
+      }
+
+      .contact {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        text-align: right;
+        font-size: 7.9pt;
+        line-height: 1.6;
+        white-space: nowrap;
+        color: var(--body);
+      }
+
+      .contact b {
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      section {
+        display: grid;
+        grid-template-columns: 24mm 1fr;
+        column-gap: 5mm;
+        padding: 3.3mm 0 0;
+      }
+
+      h2 {
+        margin: 0.4mm 0 0;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 7.4pt;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .item + .item {
+        margin-top: 2.3mm;
+      }
+
+      .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 6mm;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 9.6pt;
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      h3 span {
+        font-weight: 500;
+        color: var(--body);
+      }
+
+      .when {
+        flex: none;
+        font-size: 8.2pt;
+        font-weight: 500;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .stack {
+        margin-top: 0.3mm;
+        font-size: 8pt;
+        color: var(--muted);
+      }
+
+      ul {
+        margin: 0.6mm 0 0;
+        padding: 0 0 0 3.6mm;
+      }
+
+      li {
+        margin: 0.3mm 0 0;
+        padding-left: 0.6mm;
+      }
+
+      li::marker {
+        color: var(--accent);
+      }
+
+      .skills {
+        display: grid;
+        margin: 0;
+        grid-template-columns: 35mm 1fr;
+        row-gap: 1.2mm;
+      }
+
+      .skills dt {
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .skills dd {
+        margin: 0;
+      }
+
+      .rule {
+        grid-column: 1 / -1;
+        height: 0;
+        margin-top: 3.3mm;
+        border-top: 0.6pt solid var(--line);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Chernor Sulaiman Jalloh</h1>
+        <p class="role">Full-Stack Software Engineer</p>
+      </div>
+      <ul class="contact">
+        <li><b>Freetown, Sierra Leone</b> · GMT · open to remote and contract roles</li>
+        <li>
+          <a href="mailto:chernorsulaimanjalloh2025@gmail.com">chernorsulaimanjalloh2025@gmail.com</a> ·
+          <a href="tel:+23234564931">+232 34 564 931</a>
+        </li>
+        <li>
+          <a href="https://portfolio-two-amber-40.vercel.app">portfolio-two-amber-40.vercel.app</a> ·
+          <a href="https://github.com/ChernorSulaima">github.com/ChernorSulaima</a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/chernor-sulaiman-jalloh-0a9854366"
+            >linkedin.com/in/chernor-sulaiman-jalloh-0a9854366</a
+          >
+        </li>
+      </ul>
+    </header>
+
+    <section>
+      <h2>Profile</h2>
+      <p>
+        Full-stack engineer who designs and ships web and mobile products end to end, in TypeScript from the database to
+        the interface. I care most about the parts users never see: access rules proven by tests, and records that
+        survive a dropped connection. I also teach AI and software development.
+      </p>
+      <div class="rule"></div>
+    </section>
+
+    <section>
+      <h2>Products</h2>
+      <div>
+        <div class="item">
+          <div class="head">
+            <h3>LearnMe <span>· multi-tenant learning platform</span></h3>
+            <span class="when">learnme-nine.vercel.app</span>
+          </div>
+          <p class="stack">Next.js 16 · React 19 · TypeScript · Supabase (PostgreSQL, Auth, Storage) · Tailwind CSS 4</p>
+          <ul>
+            <li>
+              Designed and built a platform where each academy runs its own branded school on one app and one database:
+              course builder, classes, assignments and marking, live sessions and a file library.
+            </li>
+            <li>
+              Enforced tenant isolation with row-level security on every academy-owned table, proven by 618 pgTAP tests
+              that sign in as another academy’s owner, admin and learner. The request’s host decides the academy.
+            </li>
+          </ul>
+        </div>
+        <div class="item">
+          <div class="head">
+            <h3>Airpay <span>· savings and money-management app for Sierra Leone</span></h3>
+            <span class="when">iOS and Android · v0</span>
+          </div>
+          <p class="stack">Expo · React Native · NestJS · Drizzle ORM · PostgreSQL · TypeScript</p>
+          <ul>
+            <li>
+              Built the app and its API: a daily safe-to-spend amount worked out from money left, upcoming payments,
+              planned savings and days to payday, with savings goals, Insights and History.
+            </li>
+            <li>
+              Records queue on the phone and sync in order when the connection returns; a record sent twice is saved
+              once. SMS sign-in with single-use refresh tokens. CI on GitHub Actions, iOS builds with EAS.
+            </li>
+          </ul>
+        </div>
+        <div class="item">
+          <div class="head">
+            <h3>Sahid <span>· Qur’an memorisation and classroom app</span></h3>
+            <span class="when">iOS and Android · in development</span>
+          </div>
+          <p class="stack">Expo · React Native · Supabase · TypeScript</p>
+          <ul>
+            <li>
+              One app for four roles (Sheikh, teaching assistant, student, parent): assignments, a review queue for
+              recitations, progress points and streaks, schedules and calls.
+            </li>
+          </ul>
+        </div>
+        <div class="item">
+          <div class="head">
+            <h3>Nakam Gaming Platform <span>· real-time games with wallets</span></h3>
+            <span class="when">rollbet-arena.vercel.app</span>
+          </div>
+          <ul>
+            <li>Built live lobbies, several game modes, leaderboards, a wallet and tournaments for a client, in React, TypeScript and WebSockets.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rule"></div>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      <div>
+        <div class="item">
+          <div class="head">
+            <h3>Facilitator, AI &amp; Software Development <span>· Altruistech Luminary Center</span></h3>
+            <span class="when">Jul 2026 – Jan 2027</span>
+          </div>
+          <ul>
+            <li>Wrote a five-month curriculum covering AI foundations, prompt engineering and full-stack development.</li>
+            <li>Mentor students through capstone projects with code reviews and architecture guidance.</li>
+          </ul>
+        </div>
+        <div class="item">
+          <div class="head">
+            <h3>Independent Software Engineer <span>· Self-employed</span></h3>
+            <span class="when">2024 – present</span>
+          </div>
+          <ul>
+            <li>
+              Shipped 4+ production applications for local and international clients across e-commerce, logistics,
+              non-profits and gaming, owning scope, architecture, build, deployment and handoff.
+            </li>
+            <li>Built n8n automations joining CRMs, payment processors and messaging tools, cutting manual operations work by 60%+ for several clients.</li>
+          </ul>
+        </div>
+        <div class="item">
+          <div class="head">
+            <h3>Full-Stack Developer <span>· Sendme SL (logistics and e-commerce)</span></h3>
+            <span class="when">2025 – 2026</span>
+          </div>
+          <ul>
+            <li>Built and shipped features across the logistics platform: order management, tracking and vendor systems, from database to deployment.</li>
+          </ul>
+        </div>
+        <div class="item">
+          <div class="head">
+            <h3>Frontend Developer Intern <span>· KNS (Knowledge Network Solutions)</span></h3>
+            <span class="when">2024</span>
+          </div>
+          <ul>
+            <li>Built role-based access control interfaces and real-time threat-monitoring dashboards at a cybersecurity firm; offered a full-time role at the end.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rule"></div>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <dl class="skills">
+        <dt>Web</dt>
+        <dd>TypeScript, React, Next.js, Tailwind CSS, Vite</dd>
+        <dt>Mobile</dt>
+        <dd>React Native, Expo, Expo Router, offline sync</dd>
+        <dt>Backend and data</dt>
+        <dd>Node.js, NestJS, PostgreSQL, Supabase, row-level security, Drizzle ORM, REST / OpenAPI</dd>
+        <dt>Quality and delivery</dt>
+        <dd>Playwright, Vitest, Jest, pgTAP, GitHub Actions, Vercel, EAS Build, n8n</dd>
+      </dl>
+      <div class="rule"></div>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <div class="head">
+        <h3>Software Engineering in Multimedia <span>· Limkokwing University of Creative Technology, Sierra Leone</span></h3>
+        <span class="when">Languages: English, Krio, Fullah</span>
+      </div>
+    </section>
+  </body>
+</html>

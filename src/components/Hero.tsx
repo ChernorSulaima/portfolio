@@ -1,20 +1,19 @@
 import React from 'react';
-import IdBadge from './IdBadge';
+import PortraitCard from './PortraitCard';
 import Icon from './ui/Icon';
 import { RESUME_FILENAME, RESUME_URL, heroFacts, mobileHeroFacts, socialLinks } from '../data/personalData';
 import { PHONE_QUERY, useMediaQuery } from '../hooks/useMediaQuery';
 
-const AvailablePill: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <span
-    className={`inline-flex items-center gap-2.5 py-1.5 pl-2.5 pr-3.5 border border-line-2 rounded-full bg-surface font-mono text-[11px] font-bold tracking-[0.14em] uppercase ${className}`}
-  >
-    <span className="w-2 h-2 rounded-full bg-[#22C55E] shadow-[0_0_0_4px_rgba(34,197,94,0.18)]" />
-    Available for work
+/** Small label above the name: where Chernor is and what he does. */
+const RoleLine: React.FC<{ className?: string }> = ({ className = '' }) => (
+  <span className={`inline-flex items-center gap-3 font-mono text-[12px] font-bold tracking-[0.2em] uppercase text-accent-text ${className}`}>
+    <span className="w-10 h-px bg-accent" />
+    Software engineer · Freetown
   </span>
 );
 
 const INTRO =
-  'I build pixel-perfect, performant web applications with a focus on seamless user experiences and scalable architecture.';
+  'I design and ship web and mobile products end to end: multi-tenant SaaS, fintech and education apps, built in TypeScript from the database to the interface.';
 
 const Socials: React.FC<{ className?: string }> = ({ className = '' }) => (
   <div className={`flex gap-2.5 ${className}`}>
@@ -35,7 +34,7 @@ const ResumeLink: React.FC<{ className?: string }> = ({ className = '' }) => (
 
 const dotGridMask = (mask: string): React.CSSProperties => ({ WebkitMaskImage: mask, maskImage: mask });
 
-/** Phone hero, from the "Home — mobile" artboard: text first, the badge underneath, then a 2×2 fact grid. */
+/** Phone hero: text first, the portrait underneath, then a 2×2 fact grid. */
 const PhoneHero: React.FC = () => (
   <section id="home" className="relative overflow-hidden pt-14 pb-10">
     <div
@@ -44,7 +43,7 @@ const PhoneHero: React.FC = () => (
       style={dotGridMask('radial-gradient(ellipse 80% 45% at 50% 22%, #000 20%, transparent 75%)')}
     />
     <div className="relative px-5 flex flex-col gap-[22px]">
-      <AvailablePill className="self-start" />
+      <RoleLine className="self-start !text-[11px]" />
       <div className="flex flex-col gap-2">
         <h1 className="m-0 font-heading font-bold text-[42px] leading-[1.02] tracking-[-0.035em]">
           Chernor Sulaiman Jalloh
@@ -60,7 +59,7 @@ const PhoneHero: React.FC = () => (
         <ResumeLink className="justify-center" />
       </div>
       <Socials className="justify-center" />
-      <IdBadge compact className="mt-[18px]" />
+      <PortraitCard compact className="mt-2" />
     </div>
     <dl className="relative mx-5 mt-10 mb-0 grid grid-cols-2 gap-px bg-line border border-line rounded-[14px] overflow-hidden">
       {mobileHeroFacts.map((fact) => (
@@ -87,7 +86,7 @@ const Hero: React.FC = () => {
       <div className="pf-container relative pt-[clamp(56px,7vw,104px)] pb-[72px]">
         <div className="flex flex-wrap items-center gap-x-20 gap-y-[72px]">
           <div className="flex-[999_1_520px] min-w-0 flex flex-col items-start gap-7">
-            <AvailablePill />
+            <RoleLine />
             <div className="flex flex-col gap-3.5">
               <h1 className="m-0 font-heading font-bold text-[clamp(48px,6.2vw,88px)] leading-none tracking-[-0.035em]">
                 Chernor Sulaiman Jalloh
@@ -107,7 +106,7 @@ const Hero: React.FC = () => {
             <Socials />
           </div>
 
-          <IdBadge className="flex-[1_1_380px] max-w-[520px] mx-auto" />
+          <PortraitCard className="flex-[1_1_360px] max-w-[460px] mx-auto" />
         </div>
 
         <dl className="mt-[88px] mb-0 grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-x-10 gap-y-6 pt-7 border-t border-line">
