@@ -12,15 +12,16 @@ import {
 } from '../../components/case-study/CaseStudyParts';
 import Kicker from '../../components/ui/Kicker';
 import Icon from '../../components/ui/Icon';
-import { AIRPAY_BACKGROUND, AIRPAY_PHONE_RADIUS, NAKAM_BACKGROUND } from '../../data/personalData';
+import IPhone from '../../components/ui/IPhone';
+import { AIRPAY_BACKGROUND, NAKAM_BACKGROUND } from '../../data/personalData';
 
-// Five screens fanned out from the centre: History, Rent goal, Home, Insights, Send money.
+// Five screens fanned out from the centre: History, Rent goal, Home, Insights, Goals.
 const HERO_PHONES = [
-  { src: '/images/airpay-history.png', width: '15%', rotate: 28, scale: 0.85, z: 1, mr: '-4%' },
-  { src: '/images/airpay-goal.png', width: '17%', rotate: 16, scale: 0.92, z: 2, mr: '-4%' },
-  { src: '/images/airpay-home.png', width: '20%', rotate: 0, scale: 1, z: 3 },
-  { src: '/images/airpay-insights.png', width: '17%', rotate: -16, scale: 0.92, z: 2, ml: '-4%' },
-  { src: '/images/airpay-send.png', width: '15%', rotate: -28, scale: 0.85, z: 1, ml: '-4%' },
+  { screen: 'airpay-history', width: '14.5%', rotate: 28, scale: 0.85, z: 1, mr: '-4%' },
+  { screen: 'airpay-goal', width: '16.5%', rotate: 16, scale: 0.92, z: 2, mr: '-4%' },
+  { screen: 'airpay-home', width: '19.5%', rotate: 0, scale: 1, z: 3 },
+  { screen: 'airpay-insights', width: '16.5%', rotate: -16, scale: 0.92, z: 2, ml: '-4%' },
+  { screen: 'airpay-goals', width: '14.5%', rotate: -28, scale: 0.85, z: 1, ml: '-4%' },
 ];
 
 type Milestone = { id: string; title: string; status: 'done' | 'testing' | 'next' | 'planned' };
@@ -60,28 +61,28 @@ const AirpayCaseStudy: React.FC = () => (
     <section className="pf-container">
       <div
         role="img"
-        aria-label="Five Airpay screens: History, a Rent savings goal, Home, Insights and Send money"
+        aria-label="Five Airpay screens on iPhones: History, a Rent savings goal, Home, Insights and Goals"
         className="relative aspect-video border border-line-2 rounded-[22px] overflow-hidden shadow-[0_60px_120px_-60px_var(--shadow)]"
         style={{ background: AIRPAY_BACKGROUND }}
       >
         <div className="absolute inset-0 flex items-center justify-center" style={{ perspective: '1600px' }}>
           {HERO_PHONES.map((phone) => (
-            <span
-              key={phone.src}
-              className="relative flex-none block leading-[0]"
+            <IPhone
+              key={phone.screen}
+              screen={phone.screen}
+              sizes="(min-width: 1360px) 260px, 20vw"
+              loading="eager"
               style={{
                 zIndex: phone.z,
                 width: phone.width,
                 marginLeft: phone.ml,
                 marginRight: phone.mr,
-                borderRadius: AIRPAY_PHONE_RADIUS,
+                borderRadius: '17% / 8%',
                 transform: phone.rotate ? `rotateY(${phone.rotate}deg) scale(${phone.scale})` : undefined,
                 boxShadow:
                   phone.z === 3 ? '0 40px 70px -24px rgba(0, 0, 0, 0.7)' : '0 30px 50px -20px rgba(0, 0, 0, 0.6)',
               }}
-            >
-              <img src={phone.src} alt="" className="block w-full h-auto" />
-            </span>
+            />
           ))}
         </div>
       </div>
@@ -107,7 +108,7 @@ const AirpayCaseStudy: React.FC = () => (
         </p>
         <div className="flex flex-wrap gap-3">
           <span className="px-3.5 py-2 rounded-full bg-accent-soft text-accent-text text-[14px] font-semibold">
-            “Le 415 a day until payday”
+            “Le 75 a day to spend until payday”
           </span>
           {['Perfect day: up to 90%', 'Good day: up to 110%', 'Over budget is amber, never red'].map((chip) => (
             <span key={chip} className="px-3.5 py-2 rounded-full border border-line-2 text-[14px]">
@@ -130,7 +131,7 @@ const AirpayCaseStudy: React.FC = () => (
         {
           tag: '02',
           title: 'Goals with a pace line',
-          body: 'A seven-step wizard works out the amount for you: “Save Le 280 a week to make it on time.”',
+          body: 'A seven-step wizard works out the amount for you: “Save Le 140 a week to make it on time.”',
         },
         {
           tag: '03',
@@ -166,22 +167,20 @@ const AirpayCaseStudy: React.FC = () => (
           </p>
         </div>
         <div className="flex-[1_1_380px] flex justify-center gap-6">
-          <span
-            className="block w-[min(42%,220px)] leading-[0] shadow-[0_30px_60px_-24px_rgba(0,0,0,0.6)]"
-            style={{ borderRadius: AIRPAY_PHONE_RADIUS }}
-          >
-            <img src="/images/airpay-home.png" alt="Airpay Home screen in light mode" className="block w-full h-auto" />
-          </span>
-          <span
-            className="block w-[min(42%,220px)] mt-10 leading-[0] shadow-[0_30px_60px_-24px_rgba(0,0,0,0.6)]"
-            style={{ borderRadius: AIRPAY_PHONE_RADIUS }}
-          >
-            <img
-              src="/images/airpay-home-dark.png"
-              alt="Airpay Home screen in dark mode"
-              className="block w-full h-auto"
-            />
-          </span>
+          <IPhone
+            screen="airpay-home"
+            alt="Airpay Home screen in light mode"
+            sizes="220px"
+            className="w-[min(42%,220px)]"
+            style={{ borderRadius: '17% / 8%', boxShadow: '0 30px 60px -24px rgba(0, 0, 0, 0.6)' }}
+          />
+          <IPhone
+            screen="airpay-home-dark"
+            alt="Airpay Home screen in dark mode"
+            sizes="220px"
+            className="w-[min(42%,220px)] mt-10"
+            style={{ borderRadius: '17% / 8%', boxShadow: '0 30px 60px -24px rgba(0, 0, 0, 0.6)' }}
+          />
         </div>
       </div>
     </section>

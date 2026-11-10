@@ -8,7 +8,7 @@ const Testimonials: React.FC = () => (
     <div className="pf-container section-pad flex flex-col gap-12">
       <div className="flex flex-col gap-[18px] max-w-[620px]">
         <Kicker>Testimonials</Kicker>
-        <h2 className="h2-section">What clients say</h2>
+        <h2 className="h2-section">What people I’ve worked with say</h2>
       </div>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,320px),1fr))] gap-5">
         {testimonials.map((t) => (

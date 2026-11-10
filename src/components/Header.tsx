@@ -13,7 +13,7 @@ const PHONE_MENU = [
   { label: 'Work', href: '#projects' },
   { label: 'Experience', href: '#experience' },
   { label: 'About', href: '#about' },
-  { label: 'Pricing', href: '#pricing' },
+  { label: 'Start a project', href: '#brief' },
   { label: 'Contact', href: '#contact' },
 ];
 

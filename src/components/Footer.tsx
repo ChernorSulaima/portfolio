@@ -6,7 +6,7 @@ const FOOTER_NAV = [
   { label: 'Projects', href: '#projects' },
   { label: 'Services', href: '#services' },
   { label: 'GitHub', href: '#github' },
-  { label: 'Pricing', href: '#pricing' },
+  { label: 'Start a project', href: '#brief' },
 ];
 
 const Footer: React.FC = () => (
@@ -18,7 +18,7 @@ const Footer: React.FC = () => (
             Sulaiman<span className="text-accent">.</span>
           </a>
           <p className="m-0 text-[14px] text-muted">
-            Full-stack software engineer building secure, high-performance web apps from Freetown, Sierra Leone.
+            Full-stack software engineer building web and mobile products from Freetown, Sierra Leone. Open to remote and contract roles.
           </p>
         </div>
         <div className="flex flex-wrap gap-x-[72px] gap-y-8">

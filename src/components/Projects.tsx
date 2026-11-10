@@ -15,10 +15,10 @@ const Projects: React.FC = () => {
     <div className="pf-container section-pad">
       <Reveal className="flex flex-wrap items-end justify-between gap-x-12 gap-y-5 mb-6">
         <div className="flex flex-col gap-[18px] max-w-[620px]">
-          <Kicker>Portfolio</Kicker>
-          <h2 className="h2-section">Selected works</h2>
+          <Kicker>Work</Kicker>
+          <h2 className="h2-section">Selected work</h2>
           <p className="m-0 text-[17px] text-muted">
-            Real-world applications built for real businesses — from procurement platforms to gaming arenas.
+            Products I designed and built end to end: a learning platform, a savings app, a gaming platform and a Qur’an classroom.
           </p>
         </div>
         <span className="font-mono text-[12px] font-bold tracking-[0.08em] uppercase text-muted">

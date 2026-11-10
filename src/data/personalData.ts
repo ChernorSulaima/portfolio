@@ -1,4 +1,5 @@
 import type {
+  BriefOption,
   Client,
   Fact,
   Job,
@@ -9,36 +10,53 @@ import type {
   Testimonial,
 } from '../types';
 
-export const RESUME_URL = '/resume.pdf';
-export const RESUME_FILENAME = 'ChernorJalloh_CV.pdf';
-export const PROFILE_PHOTO = '/images/1760520818253.png';
+export const RESUME_URL = '/Chernor-Sulaiman-Jalloh-CV.pdf';
+export const RESUME_FILENAME = 'Chernor-Sulaiman-Jalloh-CV.pdf';
+export const PORTRAIT = {
+  src: '/images/portrait-640.webp',
+  srcSet: '/images/portrait-640.webp 640w, /images/portrait-1024.webp 1024w',
+};
+
+/** Canonical production URL on Vercel. */
+export const SITE_URL = 'https://portfolio-two-amber-40.vercel.app';
+
+/** Phone for WhatsApp links: digits only, country code included. */
+export const WHATSAPP_PHONE = '23234564931';
 
 export const contactInfo = {
-  email: 'Chernorsulaimanjalloh2025@gmail.com',
-  phoneDisplay: '+232 74 512 941',
-  phoneHref: 'tel:+23274512941',
+  email: 'chernorsulaimanjalloh2025@gmail.com',
+  phoneDisplay: '+232 34 564 931',
+  phoneHref: `tel:+${WHATSAPP_PHONE}`,
   location: 'Freetown, Sierra Leone',
 };
+
+export const AVAILABILITY = 'Open to remote and contract roles';
 
 export const socialLinks: SocialLink[] = [
   { label: 'GitHub', href: 'https://github.com/ChernorSulaima', icon: 'github' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/chernor-sulaiman-jalloh-0a9854366', icon: 'linkedin' },
-  { label: 'X (Twitter)', href: 'https://x.com/ThisisChizo', icon: 'twitter' },
+  { label: 'X', href: 'https://x.com/ThisisChizo', icon: 'x' },
   { label: 'Instagram', href: 'https://www.instagram.com/thisischizo', icon: 'instagram' },
 ];
 
 export const heroFacts: Fact[] = [
   { label: 'Based in', value: 'Freetown, Sierra Leone' },
   { label: 'Education', value: 'Limkokwing University Sierra Leone' },
-  { label: 'Specialism', value: 'React, TypeScript & Node.js' },
-  { label: 'Availability', value: 'Flexible part-time' },
+  { label: 'Focus', value: 'TypeScript, React, React Native' },
+  { label: 'Availability', value: 'Remote and contract roles' },
+];
+
+/** Shown under the portrait in the hero. */
+export const portraitFacts: Fact[] = [
+  { label: 'Currently', value: 'Altruistech Luminary Center' },
+  { label: 'Building', value: 'LearnMe, Airpay, Sahid' },
 ];
 
 export const mobileHeroFacts: Fact[] = [
   { label: 'Based in', value: 'Freetown, SL' },
-  { label: 'Currently', value: 'Altruistech' },
+  { label: 'Time zone', value: 'GMT' },
+  { label: 'Focus', value: 'TypeScript, React' },
   { label: 'Education', value: 'Limkokwing University' },
-  { label: 'Availability', value: 'Part-time' },
 ];
 
 export const clients: Client[] = [
@@ -79,42 +97,16 @@ export const jobs: Job[] = [
     ],
   },
   {
-    period: '2025 — Present',
-    badge: 'Contract',
-    role: 'Workflow Automation Engineer',
-    company: 'Freelance',
-    description:
-      'Designing and deploying intelligent automation workflows with n8n — cutting manual operational overhead by 60%+ for multiple clients.',
-    achievements: [
-      'Architected and deployed end-to-end automation workflows for client businesses using n8n.',
-      'Integrated APIs across CRMs, payment processors and communication platforms into seamless data pipelines.',
-      'Cut manual operational overhead by 60%+ for multiple clients through intelligent process automation.',
-    ],
-  },
-  {
     period: '2024 — Present',
     badge: 'Contract',
-    role: 'Freelance Software Engineer',
-    company: 'Self-Employed',
+    role: 'Independent Software Engineer',
+    company: 'Self-employed',
     description:
-      'Running an independent engineering practice — 4+ production applications shipped for businesses across e-commerce, logistics, non-profits and gaming.',
+      'An independent practice building products for clients and my own: web and mobile apps across e-commerce, logistics, non-profits and gaming, plus workflow automation for client operations.',
     achievements: [
-      'Shipped 4+ production-grade applications for international and local clients — from MVP to deployment.',
-      'Own the full SDLC end to end: scoping, architecture, development, testing, Vercel deployment and handoff.',
-      'Specialise in rebuilding legacy or offline businesses with modern, digital-first workflows.',
-    ],
-  },
-  {
-    period: '2024 — Present',
-    badge: 'Contract',
-    role: 'Video Editor & Content Producer',
-    company: 'Freelance',
-    description:
-      'Editing and producing video for organisations, brands and community campaigns — from social clips to full event coverage.',
-    achievements: [
-      'Delivered broadcast-quality video for organisations including Rotaract Club and community projects.',
-      'Fluent in CapCut for fast-turnaround edits, motion graphics and social-first content.',
-      'Growing proficiency in DaVinci Resolve and Adobe Premiere Pro for long-form productions.',
+      'Shipped 4+ production applications for international and local clients, from first scope to deployment and handoff.',
+      'Designing and building my own products end to end: LearnMe (multi-tenant learning platform), Airpay (savings app) and Sahid (Qur’an classroom app).',
+      'Built n8n automations that join CRMs, payment processors and messaging tools, cutting manual operational work by 60%+ for several clients.',
     ],
   },
   {
@@ -138,41 +130,35 @@ export const SAHID_BACKGROUND =
   'radial-gradient(120% 90% at 50% 100%, #7A4E33 0%, #3B2519 55%, #23160F 100%)';
 export const NAKAM_BACKGROUND =
   'radial-gradient(120% 100% at 100% 0%, #5A161C 0%, #22100F 55%, #140A0B 100%)';
-export const GLOZE_BACKGROUND =
-  'radial-gradient(120% 100% at 0% 0%, #5A3324 0%, #2A1812 60%, #1C100C 100%)';
+export const LEARNME_BACKGROUND =
+  'radial-gradient(120% 100% at 0% 0%, #5B2A3F 0%, #2A1420 60%, #190C13 100%)';
 
-export const AIRPAY_SCREENS: [string, string, string] = [
-  '/images/airpay-goal.png',
-  '/images/airpay-home.png',
-  '/images/airpay-insights.png',
-];
-export const SAHID_SCREENS: [string, string, string] = [
-  '/images/sahid-quran-phone.png',
-  '/images/sahid-student-phone.png',
-  '/images/sahid-teacher-phone.png',
-];
-export const AIRPAY_PHONE_RADIUS = '14.7% / 6.9%';
-export const SAHID_PHONE_RADIUS = '14.7% / 7.4%';
+/** Screenshot names under /images/apps. Each one is captured from the running app at iPhone resolution. */
+export const AIRPAY_SCREENS: [string, string, string] = ['airpay-goal', 'airpay-home', 'airpay-insights'];
+export const SAHID_SCREENS: [string, string, string] = ['sahid-quran', 'sahid-student-home', 'sahid-teacher-home'];
+
+export const LEARNME_URL = 'https://learnme-nine.vercel.app';
 
 export const projects: Project[] = [
   {
     number: '01',
-    title: 'Gloze Skincare',
-    category: 'E-Commerce / Beauty',
+    title: 'LearnMe',
+    category: 'EdTech / Multi-tenant SaaS',
     description:
-      'An e-commerce platform for Gloze — a Korean skincare brand formulated specifically for melanin-rich skin tones.',
+      'A learning platform where academies, training businesses and coaches run their own branded school: courses, classes and live sessions under their own name and address.',
     challenge:
-      'The brand needed a premium shopping experience that communicated trust and ingredient transparency.',
+      'Every academy shares one app and one database, so one school must never be able to see or change another school’s learners, courses or marks.',
     solution:
-      'A polished storefront with skin quiz, product catalog, rewards program and a luxury brand feel.',
-    stack: 'React / TypeScript / Tailwind / E-Commerce',
-    caseStudyPath: '/work/gloze-skincare',
-    liveUrl: 'https://shopgloze.vercel.app',
+      'The address a request arrives on decides the academy, row-level security guards every table, and 600+ database tests prove one academy cannot reach another.',
+    stack: 'Next.js 16 / React 19 / Supabase / PostgreSQL / Tailwind',
+    caseStudyPath: '/work/learnme',
+    liveUrl: LEARNME_URL,
+    status: 'In development',
     visual: {
       kind: 'browser',
-      url: 'shopgloze.vercel.app',
-      image: '/images/shopgloze.png',
-      alt: 'Gloze Skincare homepage',
+      url: 'learnme-nine.vercel.app',
+      image: 'learnme-courses',
+      alt: 'LearnMe academy console: the course list of Maya Design School, grouped into programmes',
     },
   },
   {
@@ -184,7 +170,7 @@ export const projects: Project[] = [
     challenge:
       'People want to know one thing each day: how much can I safely spend today, and am I still on track to save?',
     solution:
-      'A daily safe-to-spend amount, savings goals with a pace line, Insights, shared family goals and a debt book both sides confirm.',
+      'A daily safe-to-spend amount, savings goals with a pace line, a jar of good days and Insights, on a record that syncs when the phone is back online.',
     stack: 'Expo / React Native / NestJS / PostgreSQL / TypeScript',
     caseStudyPath: '/work/airpay',
     githubUrl: 'https://github.com/ChernorSulaima/AirPay',
@@ -193,9 +179,8 @@ export const projects: Project[] = [
       kind: 'phones',
       brand: 'airpay',
       screens: AIRPAY_SCREENS,
-      radius: AIRPAY_PHONE_RADIUS,
       background: AIRPAY_BACKGROUND,
-      label: 'Three Airpay app screens shown on phones in 3D: a Rent savings goal, Home and Insights',
+      label: 'Three Airpay screens on iPhones: a Rent savings goal, Home and Insights',
     },
   },
   {
@@ -227,7 +212,7 @@ export const projects: Project[] = [
     challenge:
       'Hifz classes need one place where the teacher assigns and reviews lessons, students practise, and parents follow progress.',
     solution:
-      'Today’s focus set by the Sheikh, an AI review queue for recitations, Review & Test, progress points and streaks, and a Mushaf that remembers where you stopped.',
+      'Today’s focus set by the Sheikh, a review queue for recitations, Review & Test, progress points and streaks, and a Mushaf that remembers where you stopped.',
     stack: 'Expo / React Native / Supabase / TypeScript',
     caseStudyPath: '/work/sahid',
     status: 'In development',
@@ -235,83 +220,107 @@ export const projects: Project[] = [
       kind: 'phones',
       brand: 'sahid',
       screens: SAHID_SCREENS,
-      radius: SAHID_PHONE_RADIUS,
       background: SAHID_BACKGROUND,
-      label: 'Three Sahid app screens shown on phones in 3D: the Quran reader, the student home and the teacher home',
+      label: 'Three Sahid screens on iPhones: the Quran tab, the student home and the teacher home',
     },
   },
 ];
 
 export const aboutFacts: Fact[] = [
-  { label: 'Residence', value: 'Sierra Leone' },
-  { label: 'Freelance', value: 'Available, part-time' },
+  { label: 'Based in', value: 'Freetown, Sierra Leone' },
+  { label: 'Working hours', value: 'GMT, overlaps Europe and US East' },
   { label: 'Languages', value: 'English, Krio, Fullah' },
-  { label: 'Age', value: '24' },
+  { label: 'Open to', value: 'Remote and contract roles' },
 ];
 
 export const skillGroups: SkillGroup[] = [
-  { level: 'Expert', score: 3, items: ['React', 'TypeScript', 'Tailwind CSS', 'Next.js', 'Node.js', 'CapCut'] },
-  {
-    level: 'Proficient',
-    score: 2,
-    items: ['Database design', 'n8n automation', 'Auth.js / Clerk', 'DaVinci Resolve', 'Premiere Pro'],
-  },
-  { level: 'Learning', score: 1, items: ['PostgreSQL', 'GraphQL', 'AWS'] },
+  { area: 'Web', items: ['TypeScript', 'React', 'Next.js', 'Tailwind CSS', 'Vite'] },
+  { area: 'Mobile', items: ['React Native', 'Expo', 'Expo Router', 'Offline sync'] },
+  { area: 'Backend and data', items: ['Node.js', 'NestJS', 'PostgreSQL', 'Supabase', 'Drizzle ORM', 'REST / OpenAPI'] },
+  { area: 'Quality and delivery', items: ['Playwright', 'Vitest / Jest', 'GitHub Actions', 'Vercel', 'EAS Build', 'n8n'] },
 ];
 
 export const services: Service[] = [
   {
-    title: 'Full-Stack Development',
-    description: 'End-to-end web applications with secure backends and dynamic frontends.',
+    title: 'Full-stack web products',
+    description: 'Web applications from the database schema to the interface, with access rules tested rather than assumed.',
     icon: 'code',
-    items: ['React / Next.js apps', 'Secure API integration', 'Database management'],
+    items: ['React and Next.js', 'PostgreSQL and Supabase', 'Auth, roles and row-level security'],
   },
   {
-    title: 'Complex UI/UX Implementation',
-    description: 'Converting designs into pixel-perfect, interactive experiences.',
+    title: 'Mobile apps',
+    description: 'One codebase for iOS and Android that keeps working when the connection drops.',
+    icon: 'smartphone',
+    items: ['React Native and Expo', 'Offline-first records', 'Cloud builds with EAS'],
+  },
+  {
+    title: 'Interface engineering',
+    description: 'Designs turned into fast, accessible interfaces that hold up on small screens and slow networks.',
     icon: 'layout',
-    items: ['Dashboard design', 'Mobile-first layouts', 'Advanced animations'],
+    items: ['Design systems and tokens', 'Dashboards and data views', 'Core Web Vitals'],
   },
   {
-    title: 'Performance Optimization',
-    description: 'Making applications fast, accessible and SEO-friendly.',
-    icon: 'zap',
-    items: ['Core Web Vitals', 'Image optimization', 'Code splitting'],
-  },
-  {
-    title: 'Workflow Automation',
-    description: 'Automating repetitive tasks and building efficient business workflows with n8n.',
+    title: 'Workflow automation',
+    description: 'Repetitive operations work moved into automations that run on their own.',
     icon: 'workflow',
-    items: ['n8n automations', 'API integrations', 'Business process optimization'],
-  },
-  {
-    title: 'Video Editing & Production',
-    description: 'Professional video editing for organisations, brands and content creators.',
-    icon: 'film',
-    items: ['CapCut (fluent)', 'DaVinci Resolve (intermediate)', 'Premiere Pro (intermediate)'],
+    items: ['n8n workflows', 'API integrations', 'CRM, payments and messaging'],
   },
 ];
 
 export const testimonials: Testimonial[] = [
   {
-    initials: 'IK',
-    name: 'Ibrahim K.',
+    initials: 'IB',
+    name: 'Ibrahim K. Barrie',
     role: 'Program Lead, Rotaract Freetown Sunset',
     quote:
       'Honestly didn’t expect the website to come out that clean. Chernor also cut together all our campaign videos — the guy just gets it done without you having to explain things twice.',
   },
   {
-    initials: 'AS',
-    name: 'Aminata S.',
+    initials: 'AK',
+    name: 'Aminata S. Koroma',
     role: 'Operations Manager, Sendme SL',
     quote:
       'He built features on our platform and then set up n8n automations that handle stuff we used to do manually every morning. Saved us hours. Would work with him again easily.',
   },
   {
-    initials: 'MB',
-    name: 'Mohamed B.',
+    initials: 'MJ',
+    name: 'Mohamed B. Jalloh',
     role: 'Founder & CEO, BMK Procurement',
     quote:
       'Brought him on to build our procurement platform from scratch. He ended up designing the entire user flow and shipped it faster than we expected.',
   },
+];
+
+/** Options for the project brief builder. No prices: the brief starts a conversation. */
+export const briefProjectTypes: BriefOption[] = [
+  { id: 'website', label: 'Website', description: 'A marketing site or landing page that explains and converts.' },
+  { id: 'web-app', label: 'Web app', description: 'A product people sign in to: dashboards, portals, internal tools.' },
+  { id: 'mobile-app', label: 'Mobile app', description: 'An iOS and Android app from one codebase.' },
+  { id: 'store', label: 'Online store', description: 'A catalogue, cart and checkout, with the admin to run it.' },
+  { id: 'automation', label: 'Automation', description: 'Manual work between tools, turned into a workflow.' },
+  { id: 'unsure', label: 'Not sure yet', description: 'You know the problem; we work out the shape together.' },
+];
+
+export const briefFeatures: BriefOption[] = [
+  { id: 'accounts', label: 'Accounts and sign-in', description: 'Sign-up, log in and roles.' },
+  { id: 'payments', label: 'Payments', description: 'Cards or mobile money.' },
+  { id: 'admin', label: 'Admin dashboard', description: 'Manage content, users and orders.' },
+  { id: 'messaging', label: 'Messaging or notifications', description: 'Email, SMS, WhatsApp or push.' },
+  { id: 'offline', label: 'Works offline', description: 'Keeps going on a poor connection.' },
+  { id: 'ai', label: 'AI features', description: 'Assistants, search or automatic review.' },
+  { id: 'integrations', label: 'Integrations', description: 'Connect the tools you already use.' },
+  { id: 'design', label: 'Design from scratch', description: 'No designs yet: I design it too.' },
+];
+
+export const briefTimelines: BriefOption[] = [
+  { id: 'asap', label: 'As soon as possible', description: 'There is a date to hit.' },
+  { id: '1-3', label: '1 to 3 months', description: 'A focused build.' },
+  { id: '3+', label: '3 months or more', description: 'A larger product, in stages.' },
+  { id: 'flexible', label: 'Flexible', description: 'Quality first, no fixed date.' },
+];
+
+export const briefStages: BriefOption[] = [
+  { id: 'idea', label: 'Just an idea', description: 'Nothing written down yet.' },
+  { id: 'designs', label: 'Designs or a spec', description: 'There is something to build from.' },
+  { id: 'existing', label: 'Existing product', description: 'It needs fixing, extending or rebuilding.' },
 ];

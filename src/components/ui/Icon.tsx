@@ -34,9 +34,30 @@ const ICONS = {
       <circle cx="4" cy="4" r="2" />
     </>
   ),
-  twitter: (
-    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+  x: (
+    <>
+      <path d="M4 4l11.733 16h4.267l-11.733-16z" />
+      <path d="M4 20l6.768-6.768" />
+      <path d="M13.228 10.772 20 4" />
+    </>
   ),
+  smartphone: (
+    <>
+      <rect width="14" height="20" x="5" y="2" rx="2" ry="2" />
+      <path d="M12 18h.01" />
+    </>
+  ),
+  clipboard: (
+    <>
+      <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+      <path d="M12 11h4" />
+      <path d="M12 16h4" />
+      <path d="M8 11h.01" />
+      <path d="M8 16h.01" />
+    </>
+  ),
+  message: <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />,
   instagram: (
     <>
       <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />

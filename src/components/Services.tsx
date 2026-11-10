@@ -9,18 +9,18 @@ const Services: React.FC = () => (
       <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-5">
         <div className="flex flex-col gap-[18px] max-w-[620px]">
           <Kicker>Services</Kicker>
-          <h2 className="h2-section">How I can help</h2>
+          <h2 className="h2-section">What I do</h2>
           <p className="m-0 text-[17px] text-muted">
-            From the first line of code to the launch video — one partner for the whole build.
+            The work I take on, for a team I join or a client I build for.
           </p>
         </div>
-        <a href="#pricing" className="link-accent">
-          Estimate your project
+        <a href="#brief" className="link-accent">
+          Start a project brief
           <Icon name="arrow-right" size={16} strokeWidth={2} />
         </a>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,320px),1fr))] gap-px bg-line border border-line rounded-[20px] overflow-hidden">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-px bg-line border border-line rounded-[20px] overflow-hidden">
         {services.map((service) => (
           <div key={service.title} className="p-8 bg-bg flex flex-col gap-3.5">
             <span className="icon-tile">
@@ -39,18 +39,18 @@ const Services: React.FC = () => (
           </div>
         ))}
 
-        <div className="p-8 bg-surface flex flex-col gap-3.5">
-          <span className="grid place-items-center w-11 h-11 rounded-xl bg-accent text-white">
-            <Icon name="calculator" size={20} />
+        <div className="p-8 bg-surface flex flex-col gap-3.5 sm:col-span-full sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6">
+          <span className="flex-none grid place-items-center w-11 h-11 rounded-xl bg-accent text-white">
+            <Icon name="clipboard" size={20} />
           </span>
-          <h3 className="mt-2 mb-0 font-heading font-semibold text-[21px] tracking-[-0.01em]">
-            Not sure where to start?
-          </h3>
-          <p className="m-0 text-[15px] text-muted">
-            Use the pricing calculator to get a provisional starting price before we talk.
-          </p>
-          <a href="#pricing" className="btn-solid mt-auto self-start !min-h-[44px] !px-[18px] !text-[14px] !gap-2">
-            Open calculator
+          <div className="flex-[1_1_320px] flex flex-col gap-1">
+            <h3 className="m-0 font-heading font-semibold text-[21px] tracking-[-0.01em]">Have something to build?</h3>
+            <p className="m-0 text-[15px] text-muted">
+              Choose what you need and send me a ready-made brief on WhatsApp. It takes a minute.
+            </p>
+          </div>
+          <a href="#brief" className="btn-solid self-start sm:self-center !min-h-[44px] !px-[18px] !text-[14px] !gap-2">
+            Build your brief
             <Icon name="arrow-right" size={16} strokeWidth={2} />
           </a>
         </div>

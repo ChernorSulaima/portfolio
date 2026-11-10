@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Kicker from './ui/Kicker';
 import Icon from './ui/Icon';
-import { WHATSAPP_PHONE } from '../data/pricingData';
-import { contactInfo } from '../data/personalData';
+import { WHATSAPP_PHONE, contactInfo } from '../data/personalData';
+import { whatsappUrl } from '../lib/brief';
 
 interface FormData {
   name: string;
@@ -11,24 +11,31 @@ interface FormData {
 }
 
 interface ContactProps {
+  /** A brief from the project brief builder, placed in the message box. */
   initialMessage?: string;
-  quoteKey?: number;
+  /** Goes up each time a new brief arrives, so the same brief can be sent in again. */
+  briefKey?: number;
 }
 
 const FIELD = 'border rounded-xl bg-surface text-fg text-[15px] font-[inherit]';
 
-const Contact: React.FC<ContactProps> = ({ initialMessage = '', quoteKey = 0 }) => {
+const Contact: React.FC<ContactProps> = ({ initialMessage = '', briefKey = 0 }) => {
   const [formData, setFormData] = useState<FormData>({ name: '', email: '', message: initialMessage });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
-  // A quote request from the pricing calculator prefills (and focuses) the message.
+  // A brief from the builder fills the message, and the cursor goes to its last line to carry on writing.
   useEffect(() => {
-    if (quoteKey > 0 && initialMessage) {
+    if (briefKey > 0 && initialMessage) {
       setFormData((prev) => ({ ...prev, message: initialMessage }));
-      window.requestAnimationFrame(() => messageRef.current?.focus({ preventScroll: true }));
+      window.requestAnimationFrame(() => {
+        const box = messageRef.current;
+        if (!box) return;
+        box.focus({ preventScroll: true });
+        box.setSelectionRange(initialMessage.length, initialMessage.length);
+      });
     }
-  }, [quoteKey, initialMessage]);
+  }, [briefKey, initialMessage]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -60,7 +67,7 @@ const Contact: React.FC<ContactProps> = ({ initialMessage = '', quoteKey = 0 }) 
       '',
       formData.message.trim(),
     ].join('\n');
-    window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+    window.open(whatsappUrl(WHATSAPP_PHONE, text), '_blank', 'noopener,noreferrer');
   };
 
   const fieldBorder = (field: keyof FormData) => (errors[field] ? 'border-danger' : 'border-line-2');
@@ -78,7 +85,8 @@ const Contact: React.FC<ContactProps> = ({ initialMessage = '', quoteKey = 0 }) 
           <Kicker>Contact</Kicker>
           <h2 className="h2-section">Let’s build something great together.</h2>
           <p className="m-0 text-[17px] text-muted">
-            Have a project in mind or just want to say hello? Send a message and I’ll get back to you with next steps.
+            Hiring for a role, or have a project in mind? Send a message and I’ll reply with next steps, usually
+            within a day.
           </p>
           <ul className="mt-3 mb-0 p-0 list-none border-t border-line">
             {details.map((d) => {
@@ -168,8 +176,8 @@ const Contact: React.FC<ContactProps> = ({ initialMessage = '', quoteKey = 0 }) 
               id="contact-message"
               ref={messageRef}
               name="message"
-              rows={6}
-              placeholder="Tell me about your project, timeline and budget…"
+              rows={9}
+              placeholder="Tell me about the role or the project…"
               value={formData.message}
               onChange={handleChange}
               aria-invalid={Boolean(errors.message)}

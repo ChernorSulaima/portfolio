@@ -19,7 +19,7 @@ interface CaseHeroProps {
   crumb?: string;
   intro: string;
   meta: MetaItem[];
-  /** Gloze's hero has the dotted backdrop and a narrower intro. */
+  /** Dotted backdrop and a narrower intro. */
   dotted?: boolean;
 }
 
@@ -146,8 +146,8 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({ kicker, features, minW
 );
 
 interface OutcomeProps {
-  /** Placeholder stats until real numbers are available. */
-  stats: { value: string; label: string }[];
+  /** Real numbers only: leave out until there are some. */
+  stats?: { value: string; label: string }[];
   quote: string;
   initials: string;
   name: string;
@@ -157,16 +157,16 @@ interface OutcomeProps {
 export const Outcome: React.FC<OutcomeProps> = ({ stats, quote, initials, name, role }) => (
   <section className={`${SECTION} flex flex-col gap-7`}>
     <Kicker>Outcome</Kicker>
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-x-10 gap-y-6 py-7 border-y border-line">
-      {stats.map((s) => (
-        <div key={s.label} className="flex flex-col gap-1.5">
-          <span className="font-heading font-bold text-[44px] leading-none tracking-[-0.03em] text-muted">
-            {s.value}
-          </span>
-          <span className="text-[14px] text-muted">{s.label}</span>
-        </div>
-      ))}
-    </div>
+    {stats && stats.length > 0 && (
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-x-10 gap-y-6 py-7 border-y border-line">
+        {stats.map((s) => (
+          <div key={s.label} className="flex flex-col gap-1.5">
+            <span className="font-heading font-bold text-[44px] leading-none tracking-[-0.03em]">{s.value}</span>
+            <span className="text-[14px] text-muted">{s.label}</span>
+          </div>
+        ))}
+      </div>
+    )}
     <figure className="m-0 p-[clamp(28px,4vw,48px)] border border-line rounded-[20px] bg-surface flex flex-col gap-7">
       <Icon name="quote" size={32} strokeWidth={1.6} stroke="var(--accent)" />
       <blockquote className="m-0 max-w-[900px] font-heading font-medium text-[clamp(22px,2.2vw,28px)] leading-[1.4] tracking-[-0.01em]">
