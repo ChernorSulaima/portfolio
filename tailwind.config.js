@@ -10,6 +10,8 @@ export default {
       fontFamily: {
         sans: ["'Plus Jakarta Sans'", "system-ui", "sans-serif"],
         heading: ["Outfit", "sans-serif"],
+        display: ["'Instrument Serif'", "Georgia", "serif"],
+        serif: ["'PT Serif'", "Georgia", "serif"],
         mono: ["'JetBrains Mono'", "monospace"],
       },
       // Design tokens live as CSS variables in src/index.css (light on :root, dark on .dark).
